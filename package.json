@@ -1,0 +1,18 @@
+{
+  "name": "tokfox-server",
+  "version": "0.0.0",
+  "description": "TokFox server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ferjm/tokfox-server"
+  },
+  "author": "Telefónica Digital",
+  "dependencies": {
+    "express": "~3.4.8",
+    "opentok": "~0.3.4"
+  }
+}
