@@ -7,7 +7,6 @@ var OpenTok = require('opentok'),
 var data = fs.readFileSync(__dirname + '/tokbox_credentials.json')
 try {
   credentials = JSON.parse(data);
-  console.dir(credentials);
 }
 catch (err) {
   console.log('There has been an error parsing Tokbox credentials')

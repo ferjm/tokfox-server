@@ -1,5 +1,6 @@
 var opentok = require('../tokbox/opentok.js'),
-    Promise = require('bluebird');
+    Promise = require('bluebird'),
+    ApiError = require('./apiError.js').ApiError;
 
 function getToken(sessionId, role) {
   return opentok.generateToken({
@@ -12,7 +13,7 @@ function getSessionId() {
   return new Promise(function(resolve, reject) {
     opentok.createSession(null, null, function(sessionId) {
       if (!sessionId) {
-        reject('Could not get a valid session ID');
+        reject(new ApiError('Could not get a valid session ID'));
         return;
       }
       resolve(sessionId);
@@ -29,7 +30,9 @@ exports.getCredentials = function(sessionId, role) {
     } else {
       getSessionId().then(function(sessionId) {
         resolve({ sessionId: sessionId, token: getToken(sessionId, role) });
-      });
+      }).catch(function(e) {
+        reject(e);
+      });;
     }
   });
 };
