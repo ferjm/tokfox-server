@@ -24,7 +24,7 @@ exports.getCredentials = function(sessionId, role) {
   // For now, if no session ID is specified we just create a non-P2P session
   // per request
   return new Promise(function(resolve, reject) {
-    if (!sessionId) {
+    if (sessionId) {
       resolve({ sessionId: sessionId, token: getToken(sessionId, role) });
     } else {
       getSessionId().then(function(sessionId) {
