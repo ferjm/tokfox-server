@@ -1,5 +1,6 @@
 var express = require('express'),
-    http = require('http');
+    http = require('http'),
+    session = require('./routes/session.js');
 
 var app = express();
 
@@ -16,6 +17,9 @@ app.get('/', function(req, res) {
   res.type('text/plain');
   res.send('It works!');
 });
+
+// Sessions.
+app.post('/session/credentials', session.getCredentials);
 
 http.createServer(app).listen(app.get('port'), function() {
   console.log('TokFox server listening on port ' + app.get('port'));
