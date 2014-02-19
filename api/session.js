@@ -26,10 +26,18 @@ exports.getCredentials = function(sessionId, role) {
   // per request
   return new Promise(function(resolve, reject) {
     if (sessionId) {
-      resolve({ sessionId: sessionId, token: getToken(sessionId, role) });
+      resolve({
+        apiKey: opentok.apiKey,
+        sessionId: sessionId,
+        token: getToken(sessionId, role)
+      });
     } else {
       getSessionId().then(function(sessionId) {
-        resolve({ sessionId: sessionId, token: getToken(sessionId, role) });
+        resolve({
+          apiKey: opentok.apiKey,
+          sessionId: sessionId,
+          token: getToken(sessionId, role)
+        });
       }).catch(function(e) {
         reject(e);
       });;
