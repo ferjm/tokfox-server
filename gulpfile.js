@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
-var server = require('./server/server.js');
+var server = require('./server/app.js');
 
 gulp.task('default', function() {
   server.run();
