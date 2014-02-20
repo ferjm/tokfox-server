@@ -15,5 +15,10 @@
     "express": "~3.4.8",
     "opentok": "~0.3.4",
     "bluebird": "~1.0.5"
+  },
+  "devDependencies": {
+    "mocha": "~1.17.1",
+    "gulp": "~3.5.2",
+    "gulp-mocha": "~0.4.1"
   }
 }
