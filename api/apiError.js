@@ -5,7 +5,7 @@ function ApiError(message) {
 
   if (typeof message === 'object') {
     try {
-      message = JSON.stringify(message);
+      message = message.toString();
     } catch(e) {}
   }
 
