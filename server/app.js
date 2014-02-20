@@ -16,5 +16,5 @@ module.exports = (function() {
     });
   }
 
-  return { run: run }
+  return { run: run, app: app }
 })();
