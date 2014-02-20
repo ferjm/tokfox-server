@@ -12,6 +12,16 @@ npm install
 
 Running the server
 ---
+Before running the server, you need to create the `tokbox/tokbox_credentials.json` file containing your [Tokbox API key and secret](http://www.tokbox.com/opentok/api/tools/js/apikey):
+
+```json
+{
+  "key": "xxxxxx",
+  "secret": "xxxxxx"
+}
+```
+
+To run the server do a simple:
 ```sh
 gulp
 ```
