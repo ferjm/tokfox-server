@@ -7,7 +7,7 @@ function getToken(sessionId, role) {
   return opentok.generateToken({
     sessionId: sessionId,
     role: role
-  })
+  });
 }
 
 function getSessionId() {
@@ -59,7 +59,7 @@ exports.getCredentials = function(sessionId, role) {
         _getCredentials(sessionId, role, resolve, reject);
       }).catch(function(e) {
         reject(e);
-      });;
+      });
     }
   });
 };

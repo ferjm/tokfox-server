@@ -9,6 +9,6 @@ var router = function(app) {
 
   // Sessions.
   app.post('/session/credentials', session.getCredentials);
-}
+};
 
 module.exports = router;

@@ -9,6 +9,6 @@ var config = function(app) {
   app.configure('dev', function() {
     app.use(express.errorHandler());
   });
-}
+};
 
 module.exports = config;
