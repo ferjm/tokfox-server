@@ -25,6 +25,9 @@ module.exports = (function() {
     app: app,
     set dbEnabled(enabled) {
       _dbEnabled = enabled;
+    },
+    get dbEnabled() {
+      return _dbEnabled;
     }
   };
 })();

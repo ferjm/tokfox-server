@@ -1,4 +1,5 @@
 var session = require('../routes/session.js');
+var account = require('../routes/account.js');
 
 var router = function(app) {
   // Home.
@@ -9,6 +10,9 @@ var router = function(app) {
 
   // Sessions.
   app.post('/session/credentials', session.getCredentials);
+
+  // Accounts.
+  app.post('/account/create', account.create);
 };
 
 module.exports = router;
