@@ -28,8 +28,11 @@ gulp
 
 Running the tests
 ---
-[![Build Status](https://magnum.travis-ci.com/ferjm/tokfox-server)](https://magnum.travis-ci.com/ferjm/tokfox-server)
 
 ```sh
 gulp test
 ```
+
+Build status
+---
+[![Build Status](https://api.travis-ci.com/ferjm/tokfox-server.png?token=nVp5pzcZquCq324YePdz)](https://magnum.travis-ci.com/ferjm/tokfox-server)
