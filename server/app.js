@@ -3,6 +3,7 @@ var http      = require('http');
 
 module.exports = (function() {
   var app = express();
+  var _dbEnabled = true;
 
   // Configure.
   require('./config')(app);
@@ -10,18 +11,20 @@ module.exports = (function() {
   // Routes.
   require('./routes')(app);
 
-  // DB.
-  var db = require('./db');
-
   function run() {
+    if (_dbEnabled) {
+      require('./db')();
+    }
     http.createServer(app).listen(app.get('port'), function() {
       console.log('TokFox server listening on port ' + app.get('port'));
     });
   }
 
-  function stop() {
-    db.close();
-  }
-
-  return { run: run, stop: stop, app: app };
+  return {
+    run: run,
+    app: app,
+    set dbEnabled(enabled) {
+      _dbEnabled = enabled;
+    }
+  };
 })();

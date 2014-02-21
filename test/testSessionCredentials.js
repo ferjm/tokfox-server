@@ -15,6 +15,8 @@ describe(path, function() {
   // We don't want to upload API key and secret details to travis, so we just
   // mock opentok.
   before(function() {
+    // We don't want the DB enabled.
+    server.dbEnabled = false;
     sinon.stub(opentok, 'generateToken', function() {
       if (_invalidSessionId) {
         throw new Error('An invalid session ID was passed');
@@ -29,7 +31,6 @@ describe(path, function() {
   after(function() {
     opentok.generateToken.restore();
     opentok.createSession.restore();
-    server.stop();
   });
 
   it('GET', function(done) {

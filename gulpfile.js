@@ -5,17 +5,7 @@ var server  = require('./server/app.js');
 var spawn   = require('child_process').spawn;
 
 gulp.task('default', function() {
-  var mongod = spawn('mongod');
-  var serverRunning = false;
-  mongod.stdout.on('data', function(data) {
-    if (!serverRunning) {
-      serverRunning = true;
-      server.run();
-    }
-  });
-  mongod.stderr.on('data', function(data) {
-    console.log(data);
-  });
+  server.run();
 });
 
 gulp.task('test', function () {
