@@ -1,4 +1,4 @@
-var express = require('express');
+var express   = require('express');
 
 var config = function(app) {
   app.configure(function() {

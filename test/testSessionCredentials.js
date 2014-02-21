@@ -1,9 +1,10 @@
-var app     = require('../server/app.js').app;
+var server  = require('../server/app.js');
 var opentok = require('../tokbox/opentok.js');
 var request = require('supertest');
 var sinon   = require('sinon');
 var should  = require('should');
 
+var app  = server.app;
 var path = '/session/credentials';
 
 describe(path, function() {
@@ -28,6 +29,7 @@ describe(path, function() {
   after(function() {
     opentok.generateToken.restore();
     opentok.createSession.restore();
+    server.stop();
   });
 
   it('GET', function(done) {
