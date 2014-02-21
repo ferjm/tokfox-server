@@ -1,7 +1,7 @@
+var ApiError    = require('./apiError.js').ApiError;
 var opentok     = require('../tokbox/opentok.js');
 var OpenTokSDK  = require('opentok');
 var Promise     = require('bluebird');
-var ApiError    = require('./apiError.js').ApiError;
 
 function getToken(sessionId, role) {
   return opentok.generateToken({

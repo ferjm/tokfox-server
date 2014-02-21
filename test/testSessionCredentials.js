@@ -1,9 +1,10 @@
-var app     = require('../server/app.js').app;
+var server  = require('../server/app.js');
 var opentok = require('../tokbox/opentok.js');
 var request = require('supertest');
 var sinon   = require('sinon');
 var should  = require('should');
 
+var app  = server.app;
 var path = '/session/credentials';
 
 describe(path, function() {
@@ -14,6 +15,8 @@ describe(path, function() {
   // We don't want to upload API key and secret details to travis, so we just
   // mock opentok.
   before(function() {
+    // We don't want the DB enabled.
+    server.dbEnabled = false;
     sinon.stub(opentok, 'generateToken', function() {
       if (_invalidSessionId) {
         throw new Error('An invalid session ID was passed');
