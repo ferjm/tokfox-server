@@ -3,10 +3,9 @@ var Schema    = mongoose.Schema;
 
 var accountSchema = new Schema({
   alias: {
-    type: String,
-    value: String,
-    verified: Boolean,
-    unique: true
+    type: { type: String },
+    value: { type: String, unique: true },
+    verified: { type: Boolean },
   },
   push_endpoints: [String]
 });
