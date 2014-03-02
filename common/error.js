@@ -32,7 +32,7 @@ function ServerError(code, errno, error, message, info) {
   this.info = info;
   Error.captureStackTrace(this, ServerError);
 }
-ApiError.prototype = Object.create(Error.prototype);
-ApiError.prototype.constructor = ServerError;
+ServerError.prototype = Object.create(Error.prototype);
+ServerError.prototype.constructor = ServerError;
 
 module.exports.ServerError = ServerError;

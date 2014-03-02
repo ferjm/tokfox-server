@@ -1,4 +1,4 @@
-var ApiError    = require('./apiError.js').ApiError;
+var ServerError = require('../common/error.js').ServerError;
 var opentok     = require('../tokbox/opentok.js');
 var OpenTokSDK  = require('opentok');
 var Promise     = require('bluebird');
@@ -14,7 +14,8 @@ function getSessionId() {
   return new Promise(function(resolve, reject) {
     opentok.createSession(null, null, function(sessionId) {
       if (!sessionId) {
-        reject(new ApiError('Could not get a valid session ID'));
+        reject(new ServerError(400, 103, 'Create session error',
+                               'Could not get a valid session ID'));
         return;
       }
       resolve(sessionId);
@@ -26,7 +27,7 @@ function _getCredentials(sessionId, role, resolve, reject) {
   try {
     token = getToken(sessionId, role);
   } catch(e) {
-    reject(new ApiError(e));
+    reject(new ServerError(400, 102, 'Get token error', e));
     return;
   }
 
@@ -48,7 +49,11 @@ exports.getCredentials = function(sessionId, role) {
         role !== OpenTokSDK.RoleConstants.PUBLISHER &&
         role !== OpenTokSDK.RoleConstants.SUBSCRIBER &&
         role !== OpenTokSDK.RoleConstants.MODERATOR) {
-      reject(new ApiError('Not valid role value'));
+      reject(new ServerError(400, 101, 'Not valid role value',
+                             'The value of \'role\' should be one of: ' +
+                             OpenTokSDK.RoleConstants.PUBLISHER + '/' +
+                             OpenTokSDK.RoleConstants.SUBSCRIBER + '/' +
+                             OpenTokSDK.RoleConstants.MODERATOR));
       return;
     }
 

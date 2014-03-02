@@ -17,6 +17,8 @@ describe(path, function() {
   before(function() {
     // We don't want the DB enabled.
     server.dbEnabled = false;
+    // Stubs opentok.generateToken(). Should be in sync with OpenTok nodejs
+    // library.
     sinon.stub(opentok, 'generateToken', function() {
       if (_invalidSessionId) {
         throw new Error('An invalid session ID was passed');
@@ -80,14 +82,16 @@ describe(path, function() {
     _invalidSessionId = true;
     request(app)
       .post(path)
-      .expect(500)
+      .expect(400)
       .type('json')
       .send('{"sessionId": "whatever"}')
       .end(function(err, res) {
         should.not.exist(err);
         should.exist(res);
         res.should.be.json;
-        res.body.name.should.be.exactly('ApiError');
+        res.body.code.should.be.exactly(400);
+        res.body.errno.should.be.exactly(102);
+        res.body.error.should.be.exactly('Get token error');
         res.body.message.should.be.exactly(
           'Error: An invalid session ID was passed');
         res.body.should.not.have.property('apiKey');
@@ -120,15 +124,18 @@ describe(path, function() {
   it('POST with valid sessionId and invalid role', function(done) {
     request(app)
       .post(path)
-      .expect(500)
+      .expect(400)
       .type('json')
       .send('{"sessionId": "' + _sessionId + '", "role": "invalid"}')
       .end(function(err, res) {
         should.not.exist(err);
         should.exist(res);
         res.should.be.json;
-        res.body.name.should.be.exactly('ApiError');
-        res.body.message.should.be.exactly('Not valid role value');
+        res.body.code.should.be.exactly(400);
+        res.body.errno.should.be.exactly(101);
+        res.body.error.should.be.exactly('Not valid role value');
+        res.body.message.should.be.exactly('The value of \'role\' should be ' +
+                                           'one of: publisher/subscriber/moderator');
         res.body.should.not.have.property('apiKey');
         res.body.should.not.have.property('sessionId');
         res.body.should.not.have.property('token');
@@ -158,15 +165,18 @@ describe(path, function() {
   it('POST without sessionId and invalid role', function(done) {
     request(app)
       .post(path)
-      .expect(500)
+      .expect(400)
       .type('json')
       .send('{"role": "invalid"}')
       .end(function(err, res) {
         should.not.exist(err);
         should.exist(res);
         res.should.be.json;
-        res.body.name.should.be.exactly('ApiError');
-        res.body.message.should.be.exactly('Not valid role value');
+        res.body.code.should.be.exactly(400);
+        res.body.errno.should.be.exactly(101);
+        res.body.error.should.be.exactly('Not valid role value');
+        res.body.message.should.be.exactly('The value of \'role\' should be ' +
+                                           'one of: publisher/subscriber/moderator');
         res.body.should.not.have.property('apiKey');
         res.body.should.not.have.property('sessionId');
         res.body.should.not.have.property('token');
