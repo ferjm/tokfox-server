@@ -1,6 +1,6 @@
-var account   = require('../models/accountSchema.js');
-var ApiError  = require('./apiError.js').ApiError;
-var Promise   = require('bluebird');
+var account      = require('../models/accountSchema.js');
+var ServerError  = require('../common/error.js').ServerError;
+var Promise      = require('bluebird');
 
 exports.createAccount = function(accountData) {
   return new Promise(function(resolve, reject) {
@@ -17,7 +17,7 @@ exports.createAccount = function(accountData) {
 
     new account(accountObj).save(function(error, account) {
       if (error) {
-        reject(new ApiError(error));
+        reject(new ServerError(501, 201, 'DBError ', error));
         return;
       }
       resolve(account);
