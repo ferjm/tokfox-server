@@ -17,7 +17,7 @@ exports.createAccount = function(accountData) {
 
     new account(accountObj).save(function(error, account) {
       if (error) {
-        reject(new ServerError(501, 201, 'DBError ', error));
+        reject(new ServerError(501, 201, 'Database error', error));
         return;
       }
       resolve(account);
