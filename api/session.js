@@ -68,3 +68,26 @@ exports.getCredentials = function(sessionId, role) {
     }
   });
 };
+
+exports.invite = function(sessionId, alias) {
+  return new Promise(function(resolve, reject) {
+    if (!sessionId) {
+      reject(new ServerError(400, 110, 'Missing sessionId',
+             'You must provide a valid session ID'));
+      return;
+    }
+
+    // TODO: verify alias.
+    if (!alias) {
+      reject(new ServerError(400, 110, 'Missing alias',
+             'You must provide a valid alias'));
+      return;
+    }
+  });
+};
+
+exports.acceptInvitation = function() {
+};
+
+exports.rejectInvitation = function() {
+};

@@ -58,13 +58,14 @@ The currently-defined error responses are:
 
 * Session
     * [POST /session/credentials](#post-sessioncredentials)
-    * POST /session/invite
-    * GET /session/invitations
+    * [POST /session/invite](#post-sessioninvite)
+    * [POST /session/accept_invitation](#post-sessionaccept_invitation)
+    * [POST /session/reject_invitation](#post-sessionreject_invitation)
 * Account
-    * [POST /account/create](#post-accountcreate)
-    * POST /account/delete
-    * POST /account/verify
-    * POST /account/exists
+    * [POST /account/create](#post-account_create)
+    * [POST /account/delete](#post-accountdelete)
+    * [POST /account/verify](#post-accountverify)
+    * [POST /account/exists](#post-accountexists)
 
 ## POST /session/credentials
 ### Request
@@ -94,8 +95,20 @@ Date: Mon, 03 Mar 2014 16:17:50 GMT
 }
 ```
 
+## POST /session/invite
+### Request
+### Response
+
+## POST /session/accept_invitation
+### Request
+### Response
+
+## POST /session/reject_invitation
+### Request
+### Response
+
 ## POST /account/create
-## Request
+### Request
 ```ssh
 POST /account/create HTTP/1.1
 Content-Type: application/json
@@ -107,7 +120,7 @@ Content-Type: application/json
   "pushEndpoint": "http://arandomurl.com"
 }
 ```
-## Response
+### Response
 ```ssh
 HTTP/1.1 200 OK
 Connection: close
@@ -118,3 +131,15 @@ Date: Mon, 03 Mar 2014 15:06:22 GMT
 
 OK
 ```
+
+## POST /account/delete
+### Request
+### Response
+
+## POST /account/verify
+### Request
+### Response
+
+## POST /account/exists
+### Request
+### Response

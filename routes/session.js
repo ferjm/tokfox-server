@@ -15,3 +15,15 @@ exports.getCredentials = function(req, res) {
     res.send(500, new ServerError(500, 999, 'Unknown error'));
   });
 };
+
+exports.invite = function(req, res) {
+  res.send(500, new ServerError(500, 101, 'Not implemented'));
+};
+
+exports.acceptInvitation = function(req, res) {
+  res.send(500, new ServerError(500, 101, 'Not implemented'));
+};
+
+exports.rejectInvitation = function(req, res) {
+  res.send(500, new ServerError(500, 101, 'Not implemented'));
+};
