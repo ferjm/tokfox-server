@@ -58,8 +58,13 @@ The currently-defined error responses are:
 
 * Session
     * [POST /session/credentials](#post-sessioncredentials)
+    * POST /session/invite
+    * GET /session/invitations
 * Account
     * [POST /account/create](#post-accountcreate)
+    * POST /account/delete
+    * POST /account/verify
+    * POST /account/exists
 
 ## POST /session/credentials
 ### Request
