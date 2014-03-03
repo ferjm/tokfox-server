@@ -10,3 +10,5 @@ notifications:
 
 before_script:
   - node scripts/dummyCredentials.js
+
+services: mongodb
