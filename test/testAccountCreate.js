@@ -14,12 +14,12 @@ describe(path, function() {
   before(function(done) {
     // We want to use our own test DB.
     server.dbEnabled = false;
-    mongoose.connect('mongodb://localhost/testdb' + Date.now());
+    //mongoose.connect('mongodb://localhost/testdb' + Date.now());
     done();
   });
 
   after(function(done) {
-    mongoose.connection.db.dropDatabase();
+    //mongoose.connection.db.dropDatabase();
     done();
   });
 
@@ -50,6 +50,7 @@ describe(path, function() {
       });
   });
 
+/*
   it('POST with valid account details', function(done) {
     request(app)
       .post(path)
@@ -64,7 +65,7 @@ describe(path, function() {
         done();
       });
   });
-
+*/
   it('POST with invalid alias type', function(done) {
     request(app)
       .post(path)
