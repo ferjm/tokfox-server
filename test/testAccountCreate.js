@@ -14,7 +14,7 @@ describe(path, function() {
   before(function(done) {
     // We want to use our own test DB.
     server.dbEnabled = false;
-    mongoose.connect('mongodb://localhost/testdb');
+    mongoose.connect('mongodb://localhost/testdb' + Date.now());
     done();
   });
 
