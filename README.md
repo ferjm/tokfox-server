@@ -35,6 +35,8 @@ gulp
 
 Running the tests
 ---
+You need to have an instance of `mongod` running to be able to run the tests.
+
 ```sh
 gulp test
 ```
