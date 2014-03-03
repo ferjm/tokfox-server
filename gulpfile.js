@@ -9,17 +9,23 @@ gulp.task('default', function() {
 });
 
 gulp.task('test', function () {
-  return test().on('error', function (e) {
+  return lint().pipe(test())
+               .on('error', function(e) {
     throw e;
   });
 });
 
 gulp.task('lint', function() {
-  gulp.src(['**/*.js', '!node_modules/**', '!test/**'])
-      .pipe(jshint())
-      .pipe(jshint.reporter('default'));
+  return lint().on('error', function(e) {
+    throw e;
+  });
 });
 
+function lint() {
+  return gulp.src(['**/*.js', '!node_modules/**', '!test/**'])
+             .pipe(jshint())
+             .pipe(jshint.reporter('default'));
+}
 
 function test() {
   return gulp.src(['test/*.js'], {read: false})

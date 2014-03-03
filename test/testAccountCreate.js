@@ -18,6 +18,11 @@ describe(path, function() {
     done();
   });
 
+  after(function(done) {
+    mongoose.connection.db.dropDatabase();
+    done();
+  });
+
   it('GET', function(done) {
     request(app)
       .get(path)
