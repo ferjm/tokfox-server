@@ -63,6 +63,53 @@ The currently-defined error responses are:
 
 ## POST /session/credentials
 ### Request
+```ssh
+POST /session/credentials HTTP/1.1
+Content-Type: application/json
+
+{
+  "role": "publisher",
+  "sessionId": "2_MX40NDYzMjUyMn5-TW9uIE1hciAwMyAwODoxNzo1MCBQU1QgM"
+}
+```
+
 ### Response
+```ssh
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: application/json; charset=utf-8
+X-Powered-By: Express
+Content-Length: 494
+Date: Mon, 03 Mar 2014 16:17:50 GMT
+
+{
+  "apiKey": "1234567",
+  "sessionId": "2_MX40NDYzMjUyMn5-TW9uIE1hciAwMyAwODoxNzo1MCBQU1QgM",
+  "token": "NTdlMzNkOGMxZjI3OTpzZXNzaW9uX2lkPTJfTVg0ME5EWXpNalV5TW41LVRXOXVJRTFoY2lBd015QXdPRG94TnpvMU1DQlFVMVFnTWpBeE5INHdMalkwTkRNd01qUi0mY3JlYXRlX3RpbWU9MTM5Mzg2MzQ3MCZub25jZT0zNTgxOSZyb2xlPSZzZXNzaW9uSWQ9Ml9NWDQwTkRZek1qVXlNbjUtVFc5dUlFMWhjaUF3TXlBd09Eb3hOem8xTUNCUVUxUWdNakF4Tkg0d0xqWTBORE13TWpSLQ=="
+}
+```
 
 ## POST /account/create
+## Request
+```ssh
+POST /account/create HTTP/1.1
+Content-Type: application/json
+{
+  "alias": {
+    "type": "msisdn",
+    "value": "+34666200100"
+  },
+  "pushEndpoint": "http://arandomurl.com"
+}
+```
+## Response
+```ssh
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: text/plain
+X-Powered-By: Express
+Content-Length: 2
+Date: Mon, 03 Mar 2014 15:06:22 GMT
+
+OK
+```
