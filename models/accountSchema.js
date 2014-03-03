@@ -7,7 +7,7 @@ var accountSchema = new Schema({
     value: { type: String, unique: true },
     verified: { type: Boolean },
   },
-  push_endpoints: [String]
+  pushEndpoints: [String]
 });
 
 module.exports = mongoose.model('Account', accountSchema);

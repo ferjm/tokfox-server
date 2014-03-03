@@ -7,9 +7,9 @@ var app  = server.app;
 var path = '/account/create';
 
 describe(path, function() {
-  var _aliasType = 'aType';
-  var _aliasValue = 'aValue';
-  var _pushEndpoint = 'aPushEndpoint';
+  var _validAliasType = 'msisdn';
+  var _validAliasValue = '+34666200111';
+  var _validPushEndpoint = 'http://arandomurl.com';
 
   before(function(done) {
     // We want to use our own test DB.
@@ -50,17 +50,78 @@ describe(path, function() {
       });
   });
 
-  it('POST with account details', function(done) {
+  it('POST with valid account details', function(done) {
     request(app)
       .post(path)
       .expect(200)
       .type('json')
-      .send('{"alias":{"type": "' + _aliasType + '", "value": "' + _aliasValue + '"}, ' +
-            '"pushEndpoint": "' + _pushEndpoint+ '"}')
+      .send('{"alias":{"type": "' + _validAliasType + '",' +
+            ' "value": "' + _validAliasValue + '"}, ' +
+            ' "pushEndpoint": "' + _validPushEndpoint + '"}')
       .end(function(err, res) {
         should.not.exist(err);
         should.exist(res);
         done();
       });
   });
+
+  it('POST with invalid alias type', function(done) {
+    request(app)
+      .post(path)
+      .expect(400)
+      .type('json')
+      .send('{"alias":{"type": "invalid",' +
+            ' "value": "' + _validAliasValue + '"}, ' +
+            ' "pushEndpoint": "' + _validPushEndpoint + '"}')
+      .end(function(err, res) {
+        should.not.exist(err);
+        should.exist(res);
+        res.body.code.should.be.exactly(400);
+        res.body.errno.should.be.exactly(201);
+        res.body.error.should.be.exactly('Wrong alias type');
+        res.body.message.should.be.exactly('Alias should be one of: msisdn');
+        done();
+      });
+  });
+
+  it('POST with invalid alias value', function(done) {
+    request(app)
+      .post(path)
+      .expect(400)
+      .type('json')
+      .send('{"alias":{"type": "' + _validAliasType + '",' +
+            ' "value": "invalid"}, ' +
+            ' "pushEndpoint": "' + _validPushEndpoint + '"}')
+      .end(function(err, res) {
+        should.not.exist(err);
+        should.exist(res);
+        res.body.code.should.be.exactly(400);
+        res.body.errno.should.be.exactly(202);
+        res.body.error.should.be.exactly('Wrong alias value');
+        res.body.message.should.be.exactly('Wrong alias value: invalid');
+        done();
+      });
+  });
+
+  it('POST with invalid push endpoint', function(done) {
+    request(app)
+      .post(path)
+      .expect(400)
+      .type('json')
+      .send('{"alias":{"type": "' + _validAliasType + '",' +
+            ' "value": "' + _validAliasValue + '"}, ' +
+            ' "pushEndpoint": "invalid"}')
+      .end(function(err, res) {
+        should.not.exist(err);
+        should.exist(res);
+        res.body.code.should.be.exactly(400);
+        res.body.errno.should.be.exactly(203);
+        res.body.error.should.be.exactly('Wrong push endpoint value');
+        res.body.message.should.be.exactly('Push endpoints must be valid ' +
+                                           'HTTP or HTTPS urls');
+        done();
+      });
+  });
+
+
 });
