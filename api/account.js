@@ -8,7 +8,7 @@ var AliasType = exports.AliasType = {
   MSISDN: 'msisdn'
 };
 
-var isValidAlias = {
+var _isValidAlias = {
   'msisdn': function(msisdn) {
     try {
       return phoneUtil.parse(msisdn);
@@ -18,22 +18,49 @@ var isValidAlias = {
   }
 };
 
+function _validateAlias(alias, reject) {
+  if (!alias || !alias.type || !alias.value) {
+    if (reject) {
+      reject(new ServerError(400, 203, 'Wrong or missing alias'));
+    }
+    return false;
+  }
+
+  switch(alias.type) {
+    case AliasType.MSISDN:
+      if (!_isValidAlias[alias.type](alias.value)) {
+        if (reject) {
+          reject(new ServerError(400, 202, 'Wrong alias value',
+                                 'Wrong alias value: ' + alias.value));
+        }
+        return false;
+      }
+      break;
+    default:
+      var aliasType = [];
+      Object.keys(AliasType).forEach(function(key) {
+        aliasType.push(AliasType[key]);
+      });
+      if (reject) {
+        reject(new ServerError(400, 201, 'Wrong alias type',
+                               'Alias should be one of: ' +
+                               aliasType.join(', ')));
+      }
+      return false;
+  }
+  return true;
+}
+
+exports.isValidAlias = function(alias) {
+  return _validateAlias(alias);
+};
+
 exports.createAccount = function(accountData) {
   return new Promise(function(resolve, reject) {
     // Alias validation.
     var alias = accountData.alias;
-    switch(alias.type) {
-      case AliasType.MSISDN:
-        if (!isValidAlias[AliasType.MSISDN](alias.value)) {
-          reject(new ServerError(400, 202, 'Wrong alias value',
-                                 'Wrong alias value: ' + alias.value));
-          return;
-        }
-        break;
-      default:
-        reject(new ServerError(400, 201, 'Wrong alias type',
-                               'Alias should be one of: ' + AliasType.MSISDN));
-        return;
+    if (!_validateAlias(alias, reject)) {
+      return;
     }
 
     // Push endpoint validation.
@@ -69,4 +96,50 @@ exports.createAccount = function(accountData) {
       resolve(account);
     });
   });
+};
+
+exports.accountExists = function(alias) {
+  return new Promise(function(resolve, reject) {
+    // Alias validation.
+    if (!_validateAlias(alias, reject)) {
+      return;
+    }
+
+    // Account search.
+    account.count({
+      'alias.type': alias.type,
+      'alias.value': alias.value
+    }, function(err, count) {
+      if (err) {
+        reject(new ServerError(501, 101, 'Database error', error));
+        return;
+      }
+      resolve({
+        'accountExists': (count > 0)
+      });
+    });
+  });
+};
+
+exports.getAccount = function(alias) {
+  return new Promise(function(resolve, reject) {
+    if (!_validateAlias(alias, reject)) {
+      return;
+    }
+
+    // Account search
+    account.findOne({
+      'alias.type': alias.type,
+      'alias.value': alias.value
+    }, function(err, account) {
+      if (err) {
+        reject(new ServerError(501, 101, 'Database error', error));
+        return;
+      }
+      resolve(account);
+    });
+  });
+};
+
+exports.addInvitation = function(alias, invitation) {
 };

@@ -1,3 +1,4 @@
+var account     = require('./account.js');
 var ServerError = require('../common/error.js').ServerError;
 var opentok     = require('../tokbox/opentok.js');
 var OpenTokSDK  = require('opentok');
@@ -77,12 +78,36 @@ exports.invite = function(sessionId, alias) {
       return;
     }
 
-    // TODO: verify alias.
-    if (!alias) {
-      reject(new ServerError(400, 110, 'Missing alias',
-             'You must provide a valid alias'));
+    if (!alias || !account.isValidAlias(alias)) {
+      var aliasType = [];
+      Object.keys(account.AliasType).forEach(function(key) {
+        aliasType.push(account.AliasType[key]);
+      });
+
+      reject(new ServerError(400, 111, 'Invalid alias',
+             'You must provide a valid alias. Allowed values are: ' +
+             aliasType.join(', ')));
       return;
     }
+
+    // Get the user if it exists.
+    account.getAccount(alias)
+    .then(function(account) {
+      if (!account) {
+        // The account is not registered, so we can't use the push
+        // notification system. For now, we just bail out.
+        // TODO: Other notification systems.
+        reject(new ServerError(400, 112, 'Alias not found',
+               'Can not notify unknown alias'));
+        return;
+      }
+
+      // We have an account, so we can invite the user to join the session.
+
+      // Add invitation.
+
+      // Notify push endpoint.
+    });
   });
 };
 

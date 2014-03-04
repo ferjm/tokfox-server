@@ -17,7 +17,18 @@ exports.getCredentials = function(req, res) {
 };
 
 exports.invite = function(req, res) {
-  res.send(500, new ServerError(500, 101, 'Not implemented'));
+  api.invite(req.body.sessionId,
+             req.body.alias)
+  .then(function(result) {
+    res.json(200, result);
+  })
+  .catch(function(error) {
+    if (error.code) {
+      res.send(error.code, error);
+      return;
+    }
+    res.send(500, new ServerError(500, 999, 'Unknown error'));
+  });
 };
 
 exports.acceptInvitation = function(req, res) {
