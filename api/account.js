@@ -141,5 +141,18 @@ exports.getAccount = function(alias) {
   });
 };
 
-exports.addInvitation = function(alias, invitation) {
+exports.addInvitation = function(id, invitation) {
+  return new Promise(function(resolve, reject) {
+    account.findOneAndUpdate({
+      _id: id
+    }, {
+      invitation: invitation
+    }, function(err, account) {
+      if (err) {
+        reject(new ServerError(501, 101, 'Database error', error));
+        return;
+      }
+      resolve(account.invitation[0]);
+    });
+  });
 };

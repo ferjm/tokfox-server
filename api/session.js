@@ -1,8 +1,9 @@
 var account     = require('./account.js');
-var ServerError = require('../common/error.js').ServerError;
 var opentok     = require('../tokbox/opentok.js');
 var OpenTokSDK  = require('opentok');
 var Promise     = require('bluebird');
+var ServerError = require('../common/error.js').ServerError;
+var request     = require('request');
 
 function getToken(sessionId, role) {
   return opentok.generateToken({
@@ -92,8 +93,8 @@ exports.invite = function(sessionId, alias) {
 
     // Get the user if it exists.
     account.getAccount(alias)
-    .then(function(account) {
-      if (!account) {
+    .then(function(receiverAccount) {
+      if (!receiverAccount) {
         // The account is not registered, so we can't use the push
         // notification system. For now, we just bail out.
         // TODO: Other notification systems.
@@ -104,9 +105,22 @@ exports.invite = function(sessionId, alias) {
 
       // We have an account, so we can invite the user to join the session.
 
-      // Add invitation.
-
-      // Notify push endpoint.
+      //TODO: We have no way to authenticate the request yet, so we don't
+      //      specify the caller details in the invitation.
+      account.addInvitation(receiverAccount._id, {
+        'sessionId': sessionId
+      })
+      .then(function(invitation) {
+        // Notify the receiver user about the invitation via push.
+        receiverAccount.pushEndpoints.forEach(function(endpoint) {
+          request({
+            method: 'PUT',
+            uri: endpoint,
+            body: 'version=' + invitation.version
+          });
+        });
+        resolve(invitation);
+      });
     });
   });
 };

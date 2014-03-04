@@ -18,7 +18,8 @@
     "validator": "~3.4.0",
     "install": "~0.1.7",
     "npm": "~1.4.4",
-    "libphonenumber": "0.0.5"
+    "libphonenumber": "0.0.5",
+    "request": "~2.34.0"
   },
   "devDependencies": {
     "mocha": "~1.17.1",
