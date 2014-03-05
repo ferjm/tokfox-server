@@ -46,5 +46,15 @@ exports.acceptInvitation = function(req, res) {
 };
 
 exports.rejectInvitation = function(req, res) {
-  res.send(500, new ServerError(500, 101, 'Not implemented'));
+  api.rejectInvitation(req.body.invitationId)
+  .then(function() {
+    res.json(200);
+  })
+  .catch(function(error) {
+    if (error.code) {
+      res.send(error.code, error);
+      return;
+    }
+    res.send(500, new ServerError(500, 999, 'Unknown error'));
+  });
 };

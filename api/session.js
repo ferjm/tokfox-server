@@ -140,7 +140,7 @@ exports.invite = function(sessionId, alias) {
 };
 
 function _removeInvitation(invitationId) {
-
+  return account.removeInvitation(invitationId);
 }
 
 exports.acceptInvitation = function(invitationId) {
@@ -172,17 +172,35 @@ exports.acceptInvitation = function(invitationId) {
         return;
       }
 
-      // TODO: remove the invitation.
-
-      // And return the credentials.
-      resolve({
-        apiKey: opentok.apiKey,
-        sessionId: sessionId,
-        token: token
-      });
+      // Get rid of the invitation.
+      _removeInvitation(invitationId)
+      .then(function() {
+        // And return the credentials.
+        resolve({
+          apiKey: opentok.apiKey,
+          sessionId: sessionId,
+          token: token
+        });
+      })
+      .catch(function(e) {
+        reject(new ServerError(400, 123, 'Error removing invitation', e));
+      })
     });
   });
 };
 
-exports.rejectInvitation = function() {
+exports.rejectInvitation = function(invitationId) {
+  return new Promise(function(resolve, reject) {
+    if (!invitationId) {
+      reject(new ServerError(400, 121, 'Missing invitation ID'));
+      return;
+    }
+    _removeInvitation(invitationId)
+    .then(function() {
+      resolve();
+    })
+    .catch(function(e) {
+      reject(new ServerError(400, 123, 'Error removing invitation', e));
+    });
+  });
 };

@@ -23,10 +23,6 @@ Note that:
 
 All successful requests will produce a response with HTTP status code of "200" and content-type of "application/json".  The structure of the response body will depend on the endpoint in question.
 
-Successful responses will also include the following headers, which may be useful for the client:
-
-* `Timestamp`:  the current POSIX timestamp as seen by the server, in integer seconds.
-
 Failures due to invalid behavior from the client will produce a response with HTTP status code in the "4XX" range and content-type of "application/json".  Failures due to an unexpected situation on the server will produce a response with HTTP status code in the "5XX" range and content-type of "application/json".
 
 To simplify error handling for the client, the type of error is indicated both by a particular HTTP status code, and by an application-specific error code in the JSON response body.  For example:
@@ -48,6 +44,13 @@ The currently-defined error responses are:
 * status code 400, errno 101:  Not valid role value
 * status code 400, errno 102:  Get token error
 * status code 400, errno 103:  Create session error
+* status code 400, errno 110:  Missing session ID
+* status code 400, errno 111:  Invalid alias
+* status code 400, errno 112:  Alias not found
+* status code 400, errno 113:  Push notification error
+* status code 400, errno 121:  Missing invitation ID
+* status code 400, errno 122:  Invalid invitation ID
+* status code 400, errno 123:  Error removing invitation
 * status code 400, errno 201:  Wrong alias type
 * status code 400, errno 202:  Wrong alias value
 * status code 400, errno 203:  Wrong push endpoint value
@@ -68,7 +71,16 @@ The currently-defined error responses are:
     * [POST /account/exists](#post-accountexists)
 
 ## POST /session/credentials
+
+Creates a TokBox session and generate the required credentials to connect to it.
+
 ### Request
+
+___Parameters___
+
+* role - (optional) Can be *publisher*, *subscriber* or *moderator* (default).
+* sessionId - (optional) Sometimes a client just want to get the credentials of a specific session. A session ID will be generated if none is provided with the request.
+
 ```ssh
 POST /session/credentials HTTP/1.1
 Content-Type: application/json
@@ -80,6 +92,9 @@ Content-Type: application/json
 ```
 
 ### Response
+
+Successful requests will produce a "200 OK" response with the session credentials provided in the JSON body.
+
 ```ssh
 HTTP/1.1 200 OK
 Connection: close
@@ -91,17 +106,107 @@ Date: Mon, 03 Mar 2014 16:17:50 GMT
 {
   "apiKey": "1234567",
   "sessionId": "2_MX40NDYzMjUyMn5-TW9uIE1hciAwMyAwODoxNzo1MCBQU1QgM",
-  "token": "NTdlMzNkOGMxZjI3OTpzZXNzaW9uX2lkPTJfTVg0ME5EWXpNalV5TW41LVRXOXVJRTFoY2lBd015QXdPRG94TnpvMU1DQlFVMVFnTWpBeE5INHdMalkwTkRNd01qUi0mY3JlYXRlX3RpbWU9MTM5Mzg2MzQ3MCZub25jZT0zNTgxOSZyb2xlPSZzZXNzaW9uSWQ9Ml9NWDQwTkRZek1qVXlNbjUtVFc5dUlFMWhjaUF3TXlBd09Eb3hOem8xTUNCUVUxUWdNakF4Tkg0d0xqWTBORE13TWpSLQ=="
+  "token": "NTdlMzNkOGMxZjI3OTpzZXNzaW9uX2lkPTJfTVg0ME5EWXpNalV5TW ..."
 }
 ```
 
+Failing requests may be due to the following errors:
+
+* status code 400, errno 101:  Not valid role value
+* status code 400, errno 102:  Get token error
+* status code 400, errno 103:  Create session error
+
 ## POST /session/invite
+
+Invites a registered user to join to an existing TokBox session.
+
 ### Request
+
+___Parameters___
+
+* alias - Identifier of the invited user. Should be a valid alias of the form { 'type': 'msisdn', 'value': '+12345678'}. The only valid alias type so far is *msisdn*. More alias types will be added soon.
+* sessionId - Session identifier.
+
+```ssh
+POST /session/invite HTTP/1.1
+Content-Type: application/json
+
+{
+  "alias": {
+    "type": "msisdn",
+    "value": "+34666201466"
+  },
+  "sessionId": "1_MX40NDYzMjUyMn5-V2VkIE1hciAwNSAwOTozNzo1NCBQU1QgMjAxNH4wLjE3NTQzNT"
+}
+```
 ### Response
 
+Successful requests will produce a "200 OK" response with the invitation details provided in the JSON body.
+
+```ssh
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: application/json; charset=utf-8
+X-Powered-By: Express
+Content-Length: 126
+Date: Wed, 05 Mar 2014 18:41:58 GMT
+
+{
+  "sessionId": "1_MX40NDYzMjUyMn5-V2VkIE1hciAwNSAwOTozNzo1NCBQU1QgMjAxNH4wLjE3NTQzNT",
+  "invitationId": 1394044918008
+}
+```
+
+Failing requests may be due to the following errors:
+
+* status code 400, errno 110:  Missing session ID
+* status code 400, errno 111:  Invalid alias
+* status code 400, errno 112:  Alias not found
+* status code 400, errno 113:  Push notification error
+
 ## POST /session/accept_invitation
+
+Allows the user to accept an invitation associated to a given invitation ID. The user will be provided with the required credentials to join the session as response to this request.
+
 ### Request
+
+___Parameters___
+
+* invitationId: Identifier of the invitation. This value is received via [SimplePush notification](https://developer.mozilla.org/en-US/docs/WebAPI/Simple_Push) as the value of *version*.
+
+```ssh
+POST /session/accept_invitation HTTP/1.1
+Content-Type: application/json
+
+{
+  "invitationId": "1394044918008"
+}
+```
+
 ### Response
+
+Successful requests will produce a "200 OK" response with the session credentials provided in the JSON body.
+
+```ssh
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: application/json; charset=utf-8
+X-Powered-By: Express
+Content-Length: 512
+Date: Wed, 05 Mar 2014 18:42:09 GMT
+
+{
+  "apiKey": "1234567",
+  "sessionId": "1_MX40NDYzMjUyMn5-V2VkIE1hciAwNSAwOTozNzo1NCBQU1QgMjAx",
+  "token": "T1==cGFydG5lcl9pZD00NDYzMjUyMiZzaWc9YWNhY2MwNGMwNTJjNmYwMW9uS ..."
+}
+```
+
+Failing requests may be due to the following errors:
+
+* status code 400, errno 121:  Missing invitation ID
+* status code 400, errno 122:  Invalid invitation ID
+* status code 400, errno 123:  Error removing invitation
 
 ## POST /session/reject_invitation
 ### Request
@@ -120,6 +225,7 @@ Content-Type: application/json
   "pushEndpoint": "http://arandomurl.com"
 }
 ```
+
 ### Response
 ```ssh
 HTTP/1.1 200 OK

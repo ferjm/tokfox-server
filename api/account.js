@@ -157,6 +157,22 @@ exports.addInvitation = function(accountId, invitation) {
   });
 };
 
+exports.removeInvitation = function(invitationId) {
+  return new Promise(function(resolve, reject) {
+    account.findOneAndUpdate({
+      'invitation.version': invitationId
+    }, {
+      'invitation': []
+    },function(err) {
+      if (err) {
+        reject(new ServerError(501, 101, 'Database error', error));
+        return;
+      }
+      resolve();
+    });
+  });
+};
+
 exports.getInvitation = function(invitationId) {
   return new Promise(function(resolve, reject) {
     account.findOne({
