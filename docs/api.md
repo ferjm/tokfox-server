@@ -65,7 +65,7 @@ The currently-defined error responses are:
     * [POST /session/accept_invitation](#post-sessionaccept_invitation)
     * [POST /session/reject_invitation](#post-sessionreject_invitation)
 * Account
-    * [POST /account/create](#post-account_create)
+    * [POST /account/create](#post-accountcreate)
     * [POST /account/delete](#post-accountdelete)
     * [POST /account/verify](#post-accountverify)
     * [POST /account/exists](#post-accountexists)
