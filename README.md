@@ -2,6 +2,8 @@ TokFox
 =======
 TokFox is a Telefónica Digital service that provides peer identification and peer discovery in a WebRTC connection.
 
+[Detailed API spec](/docs/api.md)
+
 Getting TokFox server
 ---
 ```sh
