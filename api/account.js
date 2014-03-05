@@ -141,10 +141,10 @@ exports.getAccount = function(alias) {
   });
 };
 
-exports.addInvitation = function(id, invitation) {
+exports.addInvitation = function(accountId, invitation) {
   return new Promise(function(resolve, reject) {
     account.findOneAndUpdate({
-      _id: id
+      _id: accountId
     }, {
       invitation: invitation
     }, function(err, account) {
@@ -153,6 +153,24 @@ exports.addInvitation = function(id, invitation) {
         return;
       }
       resolve(account.invitation[0]);
+    });
+  });
+};
+
+exports.getInvitation = function(invitationId) {
+  return new Promise(function(resolve, reject) {
+    account.findOne({
+      'invitation.version': invitationId
+    }, function(err, account) {
+      if (err) {
+        reject(new ServerError(501, 101, 'Database error', error));
+        return;
+      }
+      if (account) {
+        resolve(account.invitation[0]);
+        return;
+      }
+      resolve();
     });
   });
 };

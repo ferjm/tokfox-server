@@ -139,7 +139,49 @@ exports.invite = function(sessionId, alias) {
   });
 };
 
-exports.acceptInvitation = function() {
+function _removeInvitation(invitationId) {
+
+}
+
+exports.acceptInvitation = function(invitationId) {
+  // When the user accepts an invitation, we generate the required credentials
+  // corresponding to the session ID associated to the invitation, remove the
+  // the invitation record and return these credentials, so the user can
+  // connect to the TokBox session.
+  return new Promise(function(resolve, reject) {
+    if (!invitationId) {
+      reject(new ServerError(400, 121, 'Missing invitation ID'));
+      return;
+    }
+
+    // Get the details of the invitation.
+    account.getInvitation(invitationId)
+    .then(function(invitation) {
+      if (!invitation) {
+        reject(new ServerError(400, 122, 'Invalid invitation ID'));
+        return;
+      }
+
+      // Get the token for the session associated with the invitation.
+      var token;
+      var sessionId = invitation.sessionId;
+      try {
+        token = getToken(sessionId, OpenTokSDK.RoleConstants.PUBLISHER);
+      } catch(e) {
+        reject(new ServerError(400, 102, 'Get token error', e));
+        return;
+      }
+
+      // TODO: remove the invitation.
+
+      // And return the credentials.
+      resolve({
+        apiKey: opentok.apiKey,
+        sessionId: sessionId,
+        token: token
+      });
+    });
+  });
 };
 
 exports.rejectInvitation = function() {
