@@ -105,21 +105,35 @@ exports.invite = function(sessionId, alias) {
 
       // We have an account, so we can invite the user to join the session.
 
-      //TODO: We have no way to authenticate the request yet, so we don't
+      // TODO: Check if the alias is verified, once we have alias verification.
+
+      // TODO: We have no way to authenticate the request yet, so we don't
       //      specify the caller details in the invitation.
       account.addInvitation(receiverAccount._id, {
         'sessionId': sessionId
       })
       .then(function(invitation) {
         // Notify the receiver user about the invitation via push.
+        var notificationCount = 0;
         receiverAccount.pushEndpoints.forEach(function(endpoint) {
           request({
             method: 'PUT',
             uri: endpoint,
             body: 'version=' + invitation.version
+          }, function(error, request) {
+            notificationCount++;
+            if (error) {
+              reject(new ServerError(400, 113, 'Push notification error', error));
+              return;
+            }
+            if (notificationCount === receiverAccount.pushEndpoints.length) {
+              resolve({
+                'sessionId': invitation.sessionId,
+                'invitationId': invitation.version
+              });
+            }
           });
         });
-        resolve(invitation);
       });
     });
   });
