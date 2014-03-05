@@ -184,7 +184,7 @@ exports.acceptInvitation = function(invitationId) {
       })
       .catch(function(e) {
         reject(new ServerError(400, 123, 'Error removing invitation', e));
-      })
+      });
     });
   });
 };

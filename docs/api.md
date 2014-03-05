@@ -60,7 +60,7 @@ The currently-defined error responses are:
 # API Endpoints
 
 * Session
-    * [POST /session/credentials](#post-sessioncredentials)
+    * [POST /session/create](#post-sessioncreate)
     * [POST /session/invite](#post-sessioninvite)
     * [POST /session/accept_invitation](#post-sessionaccept_invitation)
     * [POST /session/reject_invitation](#post-sessionreject_invitation)
@@ -70,7 +70,7 @@ The currently-defined error responses are:
     * [POST /account/verify](#post-accountverify)
     * [POST /account/exists](#post-accountexists)
 
-## POST /session/credentials
+## POST /session/create
 
 Creates a TokBox session and generate the required credentials to connect to it.
 
@@ -82,7 +82,7 @@ ___Parameters___
 * sessionId - (optional) Sometimes a client just want to get the credentials of a specific session. A session ID will be generated if none is provided with the request.
 
 ```ssh
-POST /session/credentials HTTP/1.1
+POST /session/create HTTP/1.1
 Content-Type: application/json
 
 {

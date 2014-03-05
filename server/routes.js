@@ -9,7 +9,7 @@ var router = function(app) {
   });
 
   // Sessions.
-  app.post('/session/credentials', session.getCredentials);
+  app.post('/session/create', session.getCredentials);
   app.post('/session/invite', session.invite);
   app.post('/session/accept_invitation', session.acceptInvitation);
   app.post('/session/reject_invitation', session.rejectInvitation);
