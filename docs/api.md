@@ -62,10 +62,10 @@ The currently-defined error responses are:
 * Session
     * [POST /session/](#post-session)
     * [POST /session/invitation](#post-sessioninvitation)
-    * [GET /session/invitation/:id](#post-sessioninvitation:id)
+    * [GET /session/invitation/:id](#post-sessioninvitationid)
 * Account
     * [POST /account/](#post-account)
-    * [PUT /account/verify](#put-accountverify)
+    * [PUT /account/:alias_type/:alias_value/verify](#put-accountaliast_typealias_valueverify)
     * [GET /account/:alias_type/:alias_value]()
 
 ## POST /session/
@@ -173,7 +173,7 @@ ___Parameters___
 * invitationId: Identifier of the invitation. This value is received via [SimplePush notification](https://developer.mozilla.org/en-US/docs/WebAPI/Simple_Push) as the value of *version*.
 
 ```ssh
-GET /session/invitation/1234 HTTP/1.1
+GET /session/invitation/1394044918008 HTTP/1.1
 Content-Type: application/json
 ```
 
