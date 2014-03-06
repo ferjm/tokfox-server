@@ -2,7 +2,9 @@ var mongoose  = require('mongoose');
 
 var db = function() {
   var DB_NAME = 'tokfox';
-  var DB_HOST = 'localhost';
+  var DB_HOST = process.env.MONGOLAB_URI ||
+                process.env.MONGOHQ_URL ||
+                'localhost';
 
   mongoose.connect('mongodb://' + DB_HOST + '/' + DB_NAME)
           .connection.on('error', function(error) {
