@@ -138,10 +138,6 @@ exports.invite = function(sessionId, alias) {
   });
 };
 
-function _removeInvitation(invitationId) {
-  return account.removeInvitation(invitationId);
-}
-
 exports.acceptInvitation = function(invitationId) {
   // When the user accepts an invitation, we generate the required credentials
   // corresponding to the session ID associated to the invitation, remove the
@@ -172,7 +168,7 @@ exports.acceptInvitation = function(invitationId) {
       }
 
       // Get rid of the invitation.
-      _removeInvitation(invitationId)
+      account.removeInvitation(invitationId)
       .then(function() {
         // And return the credentials.
         resolve({
