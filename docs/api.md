@@ -65,8 +65,8 @@ The currently-defined error responses are:
     * [GET /session/invitation/:id](#post-sessioninvitationid)
 * Account
     * [POST /account/](#post-account)
-    * [PUT /account/:alias_type/:alias_value/verify](#put-accountaliast_typealias_valueverify)
-    * [GET /account/:alias_type/:alias_value]()
+    * [PUT /account/:alias_type/:alias_value/verify](#put-accountaliast_typealias_valueverify) (not implemented)
+    * [GET /account/:alias_type/:alias_value]() (not implemented)
 
 ## POST /session/
 
