@@ -4,7 +4,7 @@ var should    = require('should');
 var mongoose  = require('mongoose');
 
 var app  = server.app;
-var path = '/account/create';
+var path = '/account/';
 
 describe(path, function() {
   var _validAliasType = 'msisdn';

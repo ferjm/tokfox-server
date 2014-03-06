@@ -1,9 +1,9 @@
 var api         = require('../api/session.js');
 var ServerError = require('../common/error.js').ServerError;
 
-exports.getCredentials = function(req, res) {
-  api.getCredentials(req.body.sessionId,
-                     req.body.role)
+exports.create = function(req, res) {
+  api.create(req.body.sessionId,
+             req.body.role)
   .then(function(credentials) {
     res.json(200, credentials);
   })
@@ -32,23 +32,9 @@ exports.invite = function(req, res) {
 };
 
 exports.acceptInvitation = function(req, res) {
-  api.acceptInvitation(req.body.invitationId)
+  api.acceptInvitation(req.params.id)
   .then(function(result) {
     res.json(200, result);
-  })
-  .catch(function(error) {
-    if (error.code) {
-      res.send(error.code, error);
-      return;
-    }
-    res.send(500, new ServerError(500, 999, 'Unknown error'));
-  });
-};
-
-exports.rejectInvitation = function(req, res) {
-  api.rejectInvitation(req.body.invitationId)
-  .then(function() {
-    res.json(200);
   })
   .catch(function(error) {
     if (error.code) {

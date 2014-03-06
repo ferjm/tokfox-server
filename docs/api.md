@@ -60,17 +60,15 @@ The currently-defined error responses are:
 # API Endpoints
 
 * Session
-    * [POST /session/create](#post-sessioncreate)
-    * [POST /session/invite](#post-sessioninvite)
-    * [POST /session/accept_invitation](#post-sessionaccept_invitation)
-    * [POST /session/reject_invitation](#post-sessionreject_invitation)
+    * [POST /session/](#post-session)
+    * [POST /session/invitation](#post-sessioninvitation)
+    * [GET /session/invitation/:id](#post-sessioninvitation:id)
 * Account
-    * [POST /account/create](#post-accountcreate)
-    * [POST /account/delete](#post-accountdelete)
-    * [POST /account/verify](#post-accountverify)
-    * [POST /account/exists](#post-accountexists)
+    * [POST /account/](#post-account)
+    * [PUT /account/verify](#put-accountverify)
+    * [GET /account/:alias_type/:alias_value]()
 
-## POST /session/create
+## POST /session/
 
 Creates a TokBox session and generate the required credentials to connect to it.
 
@@ -82,7 +80,7 @@ ___Parameters___
 * sessionId - (optional) Sometimes a client just want to get the credentials of a specific session. A session ID will be generated if none is provided with the request.
 
 ```ssh
-POST /session/create HTTP/1.1
+POST /session/ HTTP/1.1
 Content-Type: application/json
 
 {
@@ -116,7 +114,7 @@ Failing requests may be due to the following errors:
 * status code 400, errno 102:  Get token error
 * status code 400, errno 103:  Create session error
 
-## POST /session/invite
+## POST /session/invitation
 
 Invites a registered user to join to an existing TokBox session.
 
@@ -128,7 +126,7 @@ ___Parameters___
 * sessionId - Session identifier.
 
 ```ssh
-POST /session/invite HTTP/1.1
+POST /session/invitation HTTP/1.1
 Content-Type: application/json
 
 {
@@ -164,7 +162,7 @@ Failing requests may be due to the following errors:
 * status code 400, errno 112:  Alias not found
 * status code 400, errno 113:  Push notification error
 
-## POST /session/accept_invitation
+## GET /session/invitation/:id
 
 Allows the user to accept an invitation associated to a given invitation ID. The user will be provided with the required credentials to join the session as response to this request.
 
@@ -175,12 +173,8 @@ ___Parameters___
 * invitationId: Identifier of the invitation. This value is received via [SimplePush notification](https://developer.mozilla.org/en-US/docs/WebAPI/Simple_Push) as the value of *version*.
 
 ```ssh
-POST /session/accept_invitation HTTP/1.1
+GET /session/invitation/1234 HTTP/1.1
 Content-Type: application/json
-
-{
-  "invitationId": "1394044918008"
-}
 ```
 
 ### Response
@@ -208,14 +202,10 @@ Failing requests may be due to the following errors:
 * status code 400, errno 122:  Invalid invitation ID
 * status code 400, errno 123:  Error removing invitation
 
-## POST /session/reject_invitation
-### Request
-### Response
-
-## POST /account/create
+## POST /account/
 ### Request
 ```ssh
-POST /account/create HTTP/1.1
+POST /account/ HTTP/1.1
 Content-Type: application/json
 {
   "alias": {
@@ -238,14 +228,10 @@ Date: Mon, 03 Mar 2014 15:06:22 GMT
 OK
 ```
 
-## POST /account/delete
+## PUT /account/verify/:alias_type/:alias_value
 ### Request
 ### Response
 
-## POST /account/verify
-### Request
-### Response
-
-## POST /account/exists
+## GET /account/:alias_type/:alias_value
 ### Request
 ### Response

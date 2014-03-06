@@ -25,7 +25,7 @@ function getSessionId() {
   });
 }
 
-function _getCredentials(sessionId, role, resolve, reject) {
+function getCredentials(sessionId, role, resolve, reject) {
   try {
     token = getToken(sessionId, role);
   } catch(e) {
@@ -40,7 +40,7 @@ function _getCredentials(sessionId, role, resolve, reject) {
   });
 }
 
-exports.getCredentials = function(sessionId, role) {
+exports.create = function(sessionId, role) {
   // For now, if no session ID is specified we just create a non-P2P session
   // per request
   return new Promise(function(resolve, reject) {
@@ -60,10 +60,10 @@ exports.getCredentials = function(sessionId, role) {
     }
 
     if (sessionId) {
-      _getCredentials(sessionId, role, resolve, reject);
+      getCredentials(sessionId, role, resolve, reject);
     } else {
       getSessionId().then(function(sessionId) {
-        _getCredentials(sessionId, role, resolve, reject);
+        getCredentials(sessionId, role, resolve, reject);
       }).catch(function(e) {
         reject(e);
       });
@@ -184,22 +184,6 @@ exports.acceptInvitation = function(invitationId) {
       .catch(function(e) {
         reject(new ServerError(400, 123, 'Error removing invitation', e));
       });
-    });
-  });
-};
-
-exports.rejectInvitation = function(invitationId) {
-  return new Promise(function(resolve, reject) {
-    if (!invitationId) {
-      reject(new ServerError(400, 121, 'Missing invitation ID'));
-      return;
-    }
-    _removeInvitation(invitationId)
-    .then(function() {
-      resolve();
-    })
-    .catch(function(e) {
-      reject(new ServerError(400, 123, 'Error removing invitation', e));
     });
   });
 };

@@ -5,7 +5,7 @@ var sinon   = require('sinon');
 var should  = require('should');
 
 var app  = server.app;
-var path = '/session/create';
+var path = '/session/';
 
 describe(path, function() {
   var _sessionId = 'aSessionId';

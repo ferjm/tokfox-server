@@ -9,13 +9,12 @@ var router = function(app) {
   });
 
   // Sessions.
-  app.post('/session/create', session.getCredentials);
-  app.post('/session/invite', session.invite);
-  app.post('/session/accept_invitation', session.acceptInvitation);
-  app.post('/session/reject_invitation', session.rejectInvitation);
+  app.post('/session/', session.create);
+  app.post('/session/invitation/', session.invite);
+  app.get('/session/invitation/:id', session.acceptInvitation);
 
   // Accounts.
-  app.post('/account/create', account.create);
+  app.post('/account/', account.create);
 };
 
 module.exports = router;
