@@ -1,1 +1,1 @@
-web: gulp
+web: node heroku_run.js
