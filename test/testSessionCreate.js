@@ -1,6 +1,6 @@
-var server  = require('../server/app.js');
 var opentok = require('../tokbox/opentok.js');
 var request = require('supertest');
+var server  = require('../server/app.js');
 var sinon   = require('sinon');
 var should  = require('should');
 
@@ -38,6 +38,18 @@ describe(path, function() {
   it('GET', function(done) {
     request(app)
       .get(path)
+      .expect(404, done);
+  });
+
+  it('PUT', function(done) {
+    request(app)
+      .put(path)
+      .expect(404, done);
+  });
+
+  it('DELETE', function(done) {
+    request(app)
+      .del(path)
       .expect(404, done);
   });
 

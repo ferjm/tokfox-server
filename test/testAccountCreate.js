@@ -29,6 +29,18 @@ describe(path, function() {
       .expect(404, done);
   });
 
+  it('PUT', function(done) {
+    request(app)
+      .put(path)
+      .expect(404, done);
+  });
+
+  it('DELETE', function(done) {
+    request(app)
+      .del(path)
+      .expect(404, done);
+  });
+
   it('POST', function(done) {
     request(app)
       .post(path)

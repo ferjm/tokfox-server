@@ -116,8 +116,7 @@ exports.invite = function(sessionId, alias) {
         // Notify the receiver user about the invitation via push.
         var notificationCount = 0;
         receiverAccount.pushEndpoints.forEach(function(endpoint) {
-          request({
-            method: 'PUT',
+          request.put({
             uri: endpoint,
             body: 'version=' + invitation.version
           }, function(error, request) {
