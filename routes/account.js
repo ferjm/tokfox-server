@@ -30,3 +30,28 @@ exports.create = function(req, res) {
     res.send(500, new ServerError(500, 999, 'Unknown error'));
   });
 };
+
+exports.exist = function(req, res) {
+  if (!req.params.aliasType ||
+      !req.params.aliasValue) {
+    res.send(400, new ServerError(400, 105, 'Missing alias',
+                                  'The request should contain a valid ' +
+                                  'alias type and value'));
+    return;
+  }
+
+  api.accountExists({
+    type: req.params.aliasType,
+    value: req.params.aliasValue
+  }).
+  then(function(response) {
+    res.json(200, response);
+  }).
+  catch(function(error) {
+    if (error.code) {
+      res.send(error.code, error);
+      return;
+    }
+    res.send(500, new ServerError(500, 999, 'Unknown error'));
+  });
+};

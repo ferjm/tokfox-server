@@ -15,6 +15,7 @@ var router = function(app) {
 
   // Accounts.
   app.post('/account/', account.create);
+  app.get('/account/:aliasType/:aliasValue', account.exist);
 };
 
 module.exports = router;
