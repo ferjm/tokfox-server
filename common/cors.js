@@ -5,7 +5,7 @@ module.exports.allow = function allowCORS(aReq, aRes) {
   }
 
   // Lets be VERY promiscuous... just don't do that on any serious server
-  aRes.setHeader("Access-Control-Allow-Methods", "PUT, GET, OPTIONS, DELETE");
+  aRes.setHeader("Access-Control-Allow-Methods", "PUT, GET, OPTIONS, POST, DELETE");
   aRes.setHeader("Access-Control-Allow-Origin", "*");
 
   // If the request has Access-Control-Request-Headers headers, we should
