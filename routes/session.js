@@ -1,8 +1,10 @@
 var api         = require('../api/session.js');
+var cors        = require('../common/cors.js');
 var ServerError = require('../common/error.js').ServerError;
 
 exports.create = function(req, res) {
   req._routeWhitelists.body = ['sessionId', 'role'];
+  cors.allow(req, res);
   api.create(req.body.sessionId,
              req.body.role)
   .then(function(credentials) {
@@ -19,6 +21,7 @@ exports.create = function(req, res) {
 
 exports.invite = function(req, res) {
   req._routeWhitelists.body = ['sessionId', 'alias'];
+  cors.allow(req, res);
   api.invite(req.body.sessionId,
              req.body.alias)
   .then(function(result) {
