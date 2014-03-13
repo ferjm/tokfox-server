@@ -2,6 +2,7 @@ var api         = require('../api/account.js');
 var ServerError = require('../common/error.js').ServerError;
 
 exports.create = function(req, res) {
+  req._routeWhitelists.body = ['alias', 'pushEndpoint'];
   if (!req.body ||
       !req.body.alias || typeof req.body.alias !== 'object' ||
       !req.body.alias.type || !req.body.alias.value ||
@@ -32,6 +33,7 @@ exports.create = function(req, res) {
 };
 
 exports.exist = function(req, res) {
+  req._routeWhitelists.body = ['aliasType', 'aliasValue'];
   if (!req.params.aliasType ||
       !req.params.aliasValue) {
     res.send(400, new ServerError(400, 105, 'Missing alias',
