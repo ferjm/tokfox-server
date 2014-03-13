@@ -1,3 +1,4 @@
+var cors    = require('../common/cors.js');
 var session = require('../routes/session.js');
 var account = require('../routes/account.js');
 
@@ -6,6 +7,12 @@ var router = function(app) {
   app.get('/', function(req, res) {
     res.type('text/plain');
     res.send('It works!');
+  });
+
+  // CORS.
+  app.options('*', function(req, res) {
+    cors.allow(req, res);
+    res.send(200);
   });
 
   // Sessions.
