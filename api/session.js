@@ -120,6 +120,8 @@ exports.invite = function(sessionId, alias) {
             uri: endpoint,
             body: 'version=' + invitation.version
           }, function(error, request) {
+            console.log('Push notification sent to ' + endpoint +
+                        ' with version=' + invitation.version);
             notificationCount++;
             if (error) {
               reject(new ServerError(400, 113, 'Push notification error', error));
