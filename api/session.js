@@ -118,7 +118,10 @@ exports.invite = function(sessionId, alias) {
         receiverAccount.pushEndpoints.forEach(function(endpoint) {
           request.put({
             uri: endpoint,
-            body: 'version=' + invitation.version
+            body: 'version=' + invitation.version,
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
           }, function(error, request) {
             console.log('Push notification sent to ' + endpoint +
                         ' with version=' + invitation.version);
