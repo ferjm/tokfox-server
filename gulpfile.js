@@ -2,7 +2,6 @@ var gulp    = require('gulp');
 var jshint  = require('gulp-jshint');
 var mocha   = require('gulp-spawn-mocha');
 var server  = require('./server/app.js');
-var spawn   = require('child_process').spawn;
 
 gulp.task('default', function() {
   server.run();

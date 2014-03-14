@@ -2,11 +2,14 @@ var api         = require('../api/account.js');
 var ServerError = require('../common/error.js').ServerError;
 
 exports.create = function(req, res) {
-  req._routeWhitelists.body = ['alias', 'pushEndpoint'];
+  req._routeWhitelists.body = ['alias', 'pushEndpoints'];
   if (!req.body ||
       !req.body.alias || typeof req.body.alias !== 'object' ||
       !req.body.alias.type || !req.body.alias.value ||
-      !req.body.pushEndpoint) {
+      !req.body.pushEndpoint || typeof req.body.pushEndpoint !== 'object' ||
+      !req.body.pushEndpoint.invitation ||
+      !req.body.pushEndpoint.rejection ||
+      !req.body.pushEndpoint.description) {
     res.send(400, new ServerError(400, 104, 'Missing account information',
                                   'Request should contain an alias and a ' +
                                   'list of push endpoints'));
@@ -18,7 +21,11 @@ exports.create = function(req, res) {
       type: req.body.alias.type,
       value: req.body.alias.value
     },
-    pushEndpoint: req.body.pushEndpoint
+    pushEndpoint: {
+      invitation: req.body.pushEndpoint.invitation,
+      rejection: req.body.pushEndpoint.rejection,
+      description: req.body.pushEndpoint.description
+    }
   })
   .then(function() {
     res.send(200);

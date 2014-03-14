@@ -65,7 +65,11 @@ exports.createAccount = function(accountData) {
 
     // Push endpoint validation.
     var pushEndpoint = accountData.pushEndpoint;
-    if (!validator.isURL(pushEndpoint, {
+    if (!validator.isURL(pushEndpoint.invitation, {
+          protocols: ['http', 'https'],
+          require_protocol: true
+        }) ||
+        !validator.isURL(pushEndpoint.rejection, {
           protocols: ['http', 'https'],
           require_protocol: true
         })) {
@@ -86,7 +90,11 @@ exports.createAccount = function(accountData) {
       pushEndpoints: []
     };
 
-    accountObj.pushEndpoints.push(pushEndpoint);
+    accountObj.pushEndpoints.push({
+      invitation: pushEndpoint.invitation,
+      rejection: pushEndpoint.rejection,
+      description: pushEndpoint.description
+    });
 
     new account(accountObj).save(function(error, account) {
       if (error) {

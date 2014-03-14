@@ -14,4 +14,4 @@ module.exports.allow = function allowCORS(aReq, aRes) {
   if (rh) { // We don't really care much about this...
     aRes.setHeader("Access-Control-Allow-Headers", rh);
   }
-}
+};
