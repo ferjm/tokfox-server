@@ -6,8 +6,12 @@ var OpenTok = require('opentok');
 // We expose the API key so clients won't need to do any key selection logic
 // if this is needed at some point.
 
-var apiKey = process.env.TB_KEY;
-var apiSecret = process.env.TB_SECRET;
+if (!process.env.TB_KEY || !process.env.TB_SECRET) {
+  console.warning('Using dummy TokBox credentials');
+}
+
+var apiKey = process.env.TB_KEY || 'dummy';
+var apiSecret = process.env.TB_SECRET || 'dummy';
 
 if (!apiKey || !apiSecret) {
   console.error('ERROR: You need to set TB_KEY and TB_SECRET');
