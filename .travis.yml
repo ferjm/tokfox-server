@@ -8,7 +8,4 @@ notifications:
     - ferjmoreno@gmail.com
     - josea.olivera@gmail.com
 
-before_script:
-  - node scripts/dummyCredentials.js
-
 services: mongodb

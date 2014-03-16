@@ -7,7 +7,7 @@ var OpenTok = require('opentok');
 // if this is needed at some point.
 
 if (!process.env.TB_KEY || !process.env.TB_SECRET) {
-  console.warning('Using dummy TokBox credentials');
+  console.warn('Using dummy TokBox credentials');
 }
 
 var apiKey = process.env.TB_KEY || 'dummy';
