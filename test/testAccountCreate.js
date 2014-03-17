@@ -83,9 +83,16 @@ describe(path, function() {
       .post(path)
       .expect(400)
       .type('json')
-      .send('{"alias":{"type": "invalid",' +
-            ' "value": "' + _validAliasValue + '"}, ' +
-            ' "pushEndpoint": "' + _validPushEndpoint + '"}')
+      .send('{"alias":{' +
+            '   "type": "invalid",' +
+            '   "value": "' + _validAliasValue + '"' +
+            ' }, ' +
+            ' "pushEndpoint": { ' +
+            '   "invitation": "' + _validPushEndpoint + '",' +
+            '   "rejection": "' + _validPushEndpoint + '",' +
+            '   "description": "description"' +
+            ' }' +
+            '}')
       .end(function(err, res) {
         should.not.exist(err);
         should.exist(res);
@@ -102,9 +109,16 @@ describe(path, function() {
       .post(path)
       .expect(400)
       .type('json')
-      .send('{"alias":{"type": "' + _validAliasType + '",' +
-            ' "value": "invalid"}, ' +
-            ' "pushEndpoint": "' + _validPushEndpoint + '"}')
+      .send('{"alias":{' +
+            '   "type": "' + _validAliasType + '",' +
+            '   "value": "invalid"' +
+            ' }, ' +
+            ' "pushEndpoint": { ' +
+            '   "invitation": "' + _validPushEndpoint + '",' +
+            '   "rejection": "' + _validPushEndpoint + '",' +
+            '   "description": "description"' +
+            ' }' +
+            '}')
       .end(function(err, res) {
         should.not.exist(err);
         should.exist(res);
@@ -121,9 +135,16 @@ describe(path, function() {
       .post(path)
       .expect(400)
       .type('json')
-      .send('{"alias":{"type": "' + _validAliasType + '",' +
-            ' "value": "' + _validAliasValue + '"}, ' +
-            ' "pushEndpoint": "invalid"}')
+      .send('{"alias":{' +
+            '   "type": "' + _validAliasType + '",' +
+            '   "value": "' + _validAliasValue + '"' +
+            ' }, ' +
+            ' "pushEndpoint": { ' +
+            '   "invitation": "invalid",' +
+            '   "rejection": "invalid",' +
+            '   "description": "description"' +
+            ' }' +
+            '}')
       .end(function(err, res) {
         should.not.exist(err);
         should.exist(res);

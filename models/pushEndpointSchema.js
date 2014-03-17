@@ -2,8 +2,8 @@ var mongoose  = require('mongoose');
 var Schema    = mongoose.Schema;
 
 var pushEndpointSchema = new Schema({
-  invitation: { type: String, unique: true },
-  rejection: { type: String, unique: true },
+  invitation: { type: String },
+  rejection: { type: String },
   description: { type: String }
 });
 
