@@ -64,3 +64,32 @@ exports.exist = function(req, res) {
     res.send(500, new ServerError(500, 999, 'Unknown error'));
   });
 };
+
+exports.update = function(req, res) {
+  req._routeWhitelists.body = ['alias', 'pushEndpoints'];
+  if (!req.params.aliasType ||
+      !req.params.aliasValue) {
+    res.send(400, new ServerError(400, 105, 'Missing alias',
+                                  'The request should contain a valid ' +
+                                  'alias type and value'));
+    return;
+  }
+
+  api.update({
+    type: req.params.aliasType,
+    value: req.params.aliasValue
+  }, {
+    alias: req.body.alias,
+    pushEndpoint: req.body.pushEndpoint
+  })
+  .then(function(response) {
+    res.json(200, response);
+  })
+  .catch(function(error) {
+    if (error.code) {
+      res.send(error.code, error);
+      return;
+    }
+    res.send(500, new ServerError(500, 999, 'Unknown error'));
+  });
+};

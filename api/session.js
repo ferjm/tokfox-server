@@ -116,6 +116,8 @@ exports.invite = function(sessionId, alias) {
         // Notify the receiver user about the invitation via push.
         var notificationCount = 0;
         receiverAccount.pushEndpoints.forEach(function(endpoint) {
+          // TODO: Check that the account is verified before sending the push
+          //       notification.
           request.put({
             uri: endpoint.invitation,
             body: 'version=' + invitation.version,

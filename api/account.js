@@ -51,6 +51,25 @@ function _validateAlias(alias, reject) {
   return true;
 }
 
+function _validatePushEndpoint(pushEndpoint, reject) {
+  if (!pushEndpoint.invitation ||
+      !pushEndpoint.rejection ||
+      !validator.isURL(pushEndpoint.invitation, {
+        protocols: ['http', 'https'],
+        require_protocol: true
+      }) ||
+      !validator.isURL(pushEndpoint.rejection, {
+        protocols: ['http', 'https'],
+        require_protocol: true
+      })) {
+    reject(new ServerError(400, 203, 'Wrong push endpoint value',
+                           'Push endpoints must be valid HTTP or HTTPS ' +
+                           'urls'));
+    return false;
+  }
+  return true;
+}
+
 exports.isValidAlias = function(alias) {
   return _validateAlias(alias);
 };
@@ -65,17 +84,7 @@ exports.createAccount = function(accountData) {
 
     // Push endpoint validation.
     var pushEndpoint = accountData.pushEndpoint;
-    if (!validator.isURL(pushEndpoint.invitation, {
-          protocols: ['http', 'https'],
-          require_protocol: true
-        }) ||
-        !validator.isURL(pushEndpoint.rejection, {
-          protocols: ['http', 'https'],
-          require_protocol: true
-        })) {
-      reject(new ServerError(400, 203, 'Wrong push endpoint value',
-                             'Push endpoints must be valid HTTP or HTTPS ' +
-                             'urls'));
+    if (!_validatePushEndpoint(pushEndpoint, reject)) {
       return;
     }
 
@@ -139,12 +148,64 @@ exports.getAccount = function(alias) {
     account.findOne({
       'alias.type': alias.type,
       'alias.value': alias.value
-    }, function(err, account) {
-      if (err) {
+    }, function(error, account) {
+      if (error) {
         reject(new ServerError(501, 101, 'Database error', error));
         return;
       }
       resolve(account);
+    });
+  });
+};
+
+exports.update = function(alias, accountData) {
+  return new Promise(function(resolve, reject) {
+    if (!_validateAlias(alias, reject)) {
+      return;
+    }
+
+    if (!accountData.alias && !accountData.pushEndpoint) {
+      // Nothing to update.
+      resolve();
+      return;
+    }
+
+    if ((accountData.alias && !_validateAlias(accountData.alias, reject)) ||
+        (accountData.pushEndpoint &&
+         !_validatePushEndpoint(accountData.pushEndpoint, reject))) {
+      return;
+    }
+
+    account.findOne({
+      'alias.type': alias.type,
+      'alias.value': alias.value
+    }, function(error, account) {
+      if (error) {
+        reject(new ServerError(501, 101, 'Database error', error));
+        return;
+      }
+
+      var serverError;
+      account.pushEndpoints.forEach(function(endpoint) {
+        if (accountData.pushEndpoint.invitation === endpoint.invitation ||
+            accountData.pushEndpoint.rejection === endpoint.rejection) {
+          serverError = new ServerError(400, 204, 'Duplicated push endpoint');
+        }
+      });
+
+      if (serverError) {
+        reject(serverError);
+        return;
+      }
+
+      account.pushEndpoints.push(accountData.pushEndpoint);
+      account.save(function(error, result) {
+        if (error) {
+          reject(new ServerError(501, 101, 'Database error', error));
+          return;
+        }
+        resolve(result);
+      });
     });
   });
 };
@@ -155,8 +216,8 @@ exports.addInvitation = function(accountId, invitation) {
       _id: accountId
     }, {
       invitation: invitation
-    }, function(err, account) {
-      if (err) {
+    }, function(error, account) {
+      if (error) {
         reject(new ServerError(501, 101, 'Database error', error));
         return;
       }
@@ -171,8 +232,8 @@ exports.removeInvitation = function(invitationId) {
       'invitation.version': invitationId
     }, {
       'invitation': []
-    },function(err) {
-      if (err) {
+    },function(error) {
+      if (error) {
         reject(new ServerError(501, 101, 'Database error', error));
         return;
       }
@@ -185,8 +246,8 @@ exports.getByInvitation = function(invitationId) {
   return new Promise(function(resolve, reject) {
     account.findOne({
       'invitation.version': invitationId
-    }, function(err, account) {
-      if (err) {
+    }, function(error, account) {
+      if (error) {
         reject(new ServerError(501, 101, 'Database error', error));
         return;
       }

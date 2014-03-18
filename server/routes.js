@@ -17,6 +17,8 @@ var router = function(app) {
 
   // Sessions.
   app.post('/session/', session.create);
+
+  // Invitations.
   app.post('/session/invitation/', session.invite);
   app.get('/session/invitation/:id', session.acceptInvitation);
   app.del('/session/invitation/:id', session.rejectInvitation);
@@ -24,6 +26,7 @@ var router = function(app) {
   // Accounts.
   app.post('/account/', account.create);
   app.get('/account/:aliasType/:aliasValue', account.exist);
+  app.put('/account/:aliasType/:aliasValue', account.update);
 };
 
 module.exports = router;
