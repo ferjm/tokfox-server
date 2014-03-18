@@ -30,7 +30,7 @@ To simplify error handling for the client, the type of error is indicated both b
 ```js
 {
   "code": 400, // matches the HTTP status code
-  "errno": 107, // stable application-level error number
+  "errno": 777, // stable application-level error number
   "error": "Bad Request", // string description of the error type
   "message": "the value of salt is not allowed to be undefined",
   "info": "https://docs.endpoint/errors/1234" // link to more info on the error
@@ -62,11 +62,12 @@ The currently-defined error responses are:
 * Session
     * [POST /session/](#post-session)
     * [POST /session/invitation](#post-sessioninvitation)
-    * [GET /session/invitation/:id](#post-sessioninvitationid)
+    * [GET /session/invitation/:id](#get-sessioninvitationid)
+    * [DELETE /session/invitation/:id](#delete-sessioninvitationid)
 * Account
     * [POST /account/](#post-account)
-    * [PUT /account/:alias_type/:alias_value/verify](#put-accountaliast_typealias_valueverify) (not implemented)
-    * [GET /account/:alias_type/:alias_value]() (not implemented)
+    * [PUT /account/:alias_type/:alias_value/](#put-accountalias_typealias_valueverify)
+    * [GET /account/:alias_type/:alias_value](#get-accountalias_typealias_value)
 
 ## POST /session/
 
@@ -202,6 +203,35 @@ Failing requests may be due to the following errors:
 * status code 400, errno 122:  Invalid invitation ID
 * status code 400, errno 123:  Error removing invitation
 
+## DELETE /session/invitation/:id
+
+Allows the user to reject an invitation associated to a given invitation ID.
+
+### Request
+
+__Parameters__
+
+* invitationId: Identifier of the invitation. This value is received via [SimplePush notification](https://developer.mozilla.org/en-US/docs/WebAPI/Simple_Push) as the value of *version*.
+
+```ssh
+DELETE /session/invitation/1395164957654 HTTP/1.1
+```
+### Response
+
+```ssh
+HTTP/1.1 200 OK
+Transfer-Encoding: Identity
+Content-Type: application/json; charset=utf-8
+X-Powered-By: Express
+Connection: close
+Date: Tue, 18 Mar 2014 17:49:41 GMT
+```
+
+Failing requests may be due to the following errors:
+
+* status code 400, errno 113:  Push notification error
+* status code 400, errno 122:  Invalid invitation ID
+
 ## POST /account/
 ### Request
 ```ssh
@@ -212,7 +242,11 @@ Content-Type: application/json
     "type": "msisdn",
     "value": "+34666200100"
   },
-  "pushEndpoint": "http://arandomurl.com"
+  "pushEndpoint": {
+    "invitation": "http://arandomurl.com",
+    "rejection": "http://anotherrandomurl.com",
+    "description": "My device"
+  }
 }
 ```
 
@@ -228,10 +262,105 @@ Date: Mon, 03 Mar 2014 15:06:22 GMT
 OK
 ```
 
-## PUT /account/verify/:alias_type/:alias_value
+## PUT /account/:alias_type/:alias_value
+
+Allows the user to modify an existing account in the server. For now, users can only add new push endpoints.
+
+___Parameters___
+
+* alias (ignored)
+* pushEndpoint
+
 ### Request
+```ssh
+PUT /account/msisdn/+34666200204 HTTP/1.1
+Content-Type: application/json
+
+{
+  "pushEndpoint": {
+    "invitation": "http://arandomurl.com",
+    "rejection": "http://anotherrandomurl.com",
+    "description": "A device"
+  }
+}
+```
 ### Response
+```ssh
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: application/json; charset=utf-8
+X-Powered-By: Express
+Content-Length: 780
+Date: Tue, 18 Mar 2014 17:58:38 GMT
+
+{
+  "__v": 1,
+  "_id": "53288395854b07f1c0de5020",
+  "invitation": [
+    {
+      "sessionId": "1_MX40NDYzMjUyMn5-V2VkIE1hciAwNSAwOTozNzo1NCBQU1QgMjAxNH4wLjE3NTQzNTU0fg",
+      "_id": "5328871d104d0421c17b7c61",
+      "version": 1395164957654
+    }
+  ],
+  "pushEndpoints": [
+    {
+      "invitation": "http://localhost:3001",
+      "rejection": "http://localhost:3002",
+      "description": "FxOS",
+      "_id": "53288395854b07f1c0de5021"
+    },
+    {
+      "invitation": "http://arandomurl.com",
+      "rejection": "http://anotherrandomurl.com",
+      "description": "A device",
+      "_id": "5328894e104d0421c17b7c62"
+    }
+  ],
+  "alias": [
+    {
+      "type": "msisdn",
+      "value": "+34666200204",
+      "verified": false,
+      "_id": "53288395854b07f1c0de5022"
+    }
+  ]
+}
+```
+
+Failing requests may be due to the following errors:
+
+* status code 400, errno 203: Wrong push endpoint value
+* status code 400, errno 204: Duplicated push endpoint
+* status code 501, errno 101:  Database error
 
 ## GET /account/:alias_type/:alias_value
+
+Allows the user to check if an account exists in the server.
+
 ### Request
+
+___Parameters___
+
+* aliasType
+* aliasValue
+
+```ssh
+GET /account/msisdn/+34666200204 HTTP/1.1
+```
+
 ### Response
+
+```ssh
+HTTP/1.1 200 OK
+Connection: close
+Etag: "805549393"
+Content-Type: application/json; charset=utf-8
+X-Powered-By: Express
+Content-Length: 27
+Date: Tue, 18 Mar 2014 17:53:43 GMT
+
+{
+    "accountExists": true
+}
+```
