@@ -19,6 +19,7 @@ var router = function(app) {
   app.post('/session/', session.create);
   app.post('/session/invitation/', session.invite);
   app.get('/session/invitation/:id', session.acceptInvitation);
+  app.del('/session/invitation/:id', session.rejectInvitation);
 
   // Accounts.
   app.post('/account/', account.create);

@@ -181,7 +181,7 @@ exports.removeInvitation = function(invitationId) {
   });
 };
 
-exports.getInvitation = function(invitationId) {
+exports.getByInvitation = function(invitationId) {
   return new Promise(function(resolve, reject) {
     account.findOne({
       'invitation.version': invitationId
@@ -191,7 +191,7 @@ exports.getInvitation = function(invitationId) {
         return;
       }
       if (account) {
-        resolve(account.invitation[0]);
+        resolve(account);
         return;
       }
       resolve();

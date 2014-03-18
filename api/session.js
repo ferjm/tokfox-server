@@ -117,13 +117,13 @@ exports.invite = function(sessionId, alias) {
         var notificationCount = 0;
         receiverAccount.pushEndpoints.forEach(function(endpoint) {
           request.put({
-            uri: endpoint,
+            uri: endpoint.invitation,
             body: 'version=' + invitation.version,
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
           }, function(error, request) {
-            console.log('Push notification sent to ' + endpoint +
+            console.log('Push notification sent to ' + endpoint.invitation +
                         ' with version=' + invitation.version);
             notificationCount++;
             if (error) {
@@ -155,16 +155,16 @@ exports.acceptInvitation = function(invitationId) {
     }
 
     // Get the details of the invitation.
-    account.getInvitation(invitationId)
-    .then(function(invitation) {
-      if (!invitation) {
+    account.getByInvitation(invitationId)
+    .then(function(account) {
+      if (!account || !account.invitation) {
         reject(new ServerError(400, 122, 'Invalid invitation ID'));
         return;
       }
 
       // Get the token for the session associated with the invitation.
       var token;
-      var sessionId = invitation.sessionId;
+      var sessionId = account.invitation[0].sessionId;
       try {
         token = getToken(sessionId, OpenTokSDK.RoleConstants.PUBLISHER);
       } catch(e) {
@@ -184,6 +184,48 @@ exports.acceptInvitation = function(invitationId) {
       })
       .catch(function(e) {
         reject(new ServerError(400, 123, 'Error removing invitation', e));
+      });
+    });
+  });
+};
+
+exports.rejectInvitation = function(invitationId) {
+  return new Promise(function(resolve, reject) {
+    if (!invitationId) {
+      reject(new ServerError(400, 121, 'Missing invitation ID'));
+      return;
+    }
+
+    // Get the account details.
+    account.getByInvitation(invitationId)
+    .then(function(receiverAccount) {
+      if (!receiverAccount) {
+        reject(new ServerError(400, 122, 'Invalid invitation ID'));
+        return;
+      }
+
+      // Notify the user about the rejected invitation.
+      var notificationCount = 0;
+      receiverAccount.pushEndpoints.forEach(function(endpoint) {
+        request.put({
+          uri: endpoint.rejection,
+          body: 'version=' + invitationId,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }, function(error, request) {
+          console.log('Push notification sent to ' + endpoint.rejection +
+                      ' with version=' + invitationId);
+          notificationCount++;
+          if (error) {
+            reject(new ServerError(400, 113, 'Push notification error', error));
+            return;
+          }
+          if (notificationCount === receiverAccount.pushEndpoints.length) {
+            // TODO: We don't remove the invitation for now.
+            resolve();
+          }
+        });
       });
     });
   });
