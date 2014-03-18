@@ -89,13 +89,13 @@ exports.createAccount = function(accountData) {
     }
 
     var accountObj = {
-      alias: {
+      alias: [{
         type: alias.type,
         // TODO: if the alias is an MSISDN we might want to store the whole
         //       phoneUtil.parse result
         value: alias.value,
         verified: false
-      },
+      }],
       pushEndpoints: []
     };
 

@@ -1,14 +1,11 @@
-var Invitation  = require('./invitationSchema.js');
-var mongoose    = require('mongoose');
+var Alias         = require('./aliasSchema.js');
+var Invitation    = require('./invitationSchema.js');
+var mongoose      = require('mongoose');
 var PushEndpoint  = require('./pushEndpointSchema.js');
-var Schema      = mongoose.Schema;
+var Schema        = mongoose.Schema;
 
 var accountSchema = new Schema({
-  alias: {
-    type: { type: String },
-    value: { type: String, unique: true },
-    verified: { type: Boolean },
-  },
+  alias: { type: [Alias.schema] },
   pushEndpoints: { type: [PushEndpoint.schema ] },
   //TODO For now we only allow one invitation at a time.
   invitation: { type: [Invitation.schema] }
