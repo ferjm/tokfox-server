@@ -156,15 +156,15 @@ exports.acceptInvitation = function(invitationId) {
 
     // Get the details of the invitation.
     account.getByInvitation(invitationId)
-    .then(function(account) {
-      if (!account || !account.invitation) {
+    .then(function(receiverAccount) {
+      if (!receiverAccount || !receiverAccount.invitation) {
         reject(new ServerError(400, 122, 'Invalid invitation ID'));
         return;
       }
 
       // Get the token for the session associated with the invitation.
       var token;
-      var sessionId = account.invitation[0].sessionId;
+      var sessionId = receiverAccount.invitation[0].sessionId;
       try {
         token = getToken(sessionId, OpenTokSDK.RoleConstants.PUBLISHER);
       } catch(e) {

@@ -12,8 +12,17 @@ var path  = '/session/invitation/';
 describe(path + ':id/', function() {
   var _invitationId = '123';
   var _sessionId = 'aSessionId';
-  var _dummyInvitation = {
-    sessionId: _sessionId
+  var _dummyAccount = {
+    alias: { /*whatever*/ },
+    pushEndpoints: {
+      invitation: 'http://dummy',
+      rejection: 'http://dummy',
+      description: 'My description'
+    },
+    invitation: [{
+      sessionId: _sessionId,
+      version: Date.now()
+    }]
   };
   var _token = 'aToken';
 
@@ -27,13 +36,13 @@ describe(path + ':id/', function() {
     server.dbEnabled = false;
 
     // Stub account.getInvitation.
-    sinon.stub(account, 'getInvitation', function() {
+    sinon.stub(account, 'getByInvitation', function() {
       return new Promise(function(resolve, reject) {
         if (_invalidInvitation) {
           resolve(null);
           return;
         }
-        resolve(_dummyInvitation);
+        resolve(_dummyAccount);
       });
     });
 
@@ -59,7 +68,7 @@ describe(path + ':id/', function() {
   });
 
   after(function() {
-    account.getInvitation.restore();
+    account.getByInvitation.restore();
     account.removeInvitation.restore();
     opentok.generateToken.restore();
   });
@@ -67,12 +76,6 @@ describe(path + ':id/', function() {
   it('PUT', function(done) {
     request(app)
       .put(path + _invitationId)
-      .expect(404, done);
-  });
-
-  it('DELETE', function(done) {
-    request(app)
-      .del(path + _invitationId)
       .expect(404, done);
   });
 

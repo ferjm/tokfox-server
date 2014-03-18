@@ -1,6 +1,6 @@
 var gulp    = require('gulp');
 var jshint  = require('gulp-jshint');
-var mocha   = require('gulp-spawn-mocha');
+var mocha   = require('gulp-mocha');
 var server  = require('./server/app.js');
 
 gulp.task('default', function() {
@@ -8,8 +8,7 @@ gulp.task('default', function() {
 });
 
 gulp.task('test', function () {
-  return lint().pipe(test())
-               .on('error', function(e) {
+  return test().on('error', function(e) {
     throw e;
   });
 });
@@ -27,7 +26,7 @@ function lint() {
 }
 
 function test() {
-  return gulp.src(['test/*.js'], {read: false})
+  return gulp.src(['test/*.js'])
              .pipe(mocha({ R: 'spec' }))
              .on('error', console.warn.bind(console));
 }
