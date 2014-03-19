@@ -21,7 +21,7 @@ var _isValidAlias = {
 function _validateAlias(alias, reject) {
   if (!alias || !alias.type || !alias.value) {
     if (reject) {
-      reject(new ServerError(400, 203, 'Wrong or missing alias'));
+      reject(new ServerError(400, 203, 'Missing alias'));
     }
     return false;
   }
@@ -62,7 +62,7 @@ function _validatePushEndpoint(pushEndpoint, reject) {
         protocols: ['http', 'https'],
         require_protocol: true
       })) {
-    reject(new ServerError(400, 203, 'Wrong push endpoint value',
+    reject(new ServerError(400, 204, 'Wrong push endpoint value',
                            'Push endpoints must be valid HTTP or HTTPS ' +
                            'urls'));
     return false;

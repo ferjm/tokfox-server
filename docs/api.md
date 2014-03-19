@@ -55,7 +55,8 @@ The currently-defined error responses are:
 * status code 400, errno 123:  Error removing invitation
 * status code 400, errno 201:  Wrong alias type
 * status code 400, errno 202:  Wrong alias value
-* status code 400, errno 203:  Wrong push endpoint value
+* status code 400, errno 203:  Missing alias
+* status code 400, errno 204:  Wrong push endpoint value
 * status code 501, errno 101:  Database error
 * any status code, errno 999:  Unknown error
 
@@ -263,6 +264,13 @@ Date: Mon, 03 Mar 2014 15:06:22 GMT
 
 OK
 ```
+
+Failing requests may be due to the following errors:
+
+* status code 400, errno 201:  Wrong alias type
+* status code 400, errno 202:  Wrong alias value
+* status code 400, errno 203:  Missing alias
+* status code 400, errno 204:  Wrong push endpoint value
 
 ## PUT /account/:alias_type/:alias_value
 
