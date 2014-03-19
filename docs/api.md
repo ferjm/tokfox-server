@@ -19,6 +19,8 @@ Note that:
 
 ## Request Format
 
+There is currently no authentication mechanism but we plan to use [Hawk](https://github.com/hueniverse/hawk) request signatures.
+
 ## Response Format
 
 All successful requests will produce a response with HTTP status code of "200" and content-type of "application/json".  The structure of the response body will depend on the endpoint in question.
