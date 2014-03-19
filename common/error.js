@@ -32,7 +32,7 @@ function ServerError(code, errno, error, message, info) {
   this.info = info ||
               'https://github.com/ferjm/tokfox-server/blob/master/docs/api.md';
   console.error('SERVER ERROR: ' + this.code + ' - ' + this.errno + ' - ' +
-                this.error);
+                this.error + ' - ' + this.message);
   Error.captureStackTrace(this, ServerError);
 }
 ServerError.prototype = Object.create(Error.prototype);

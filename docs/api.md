@@ -341,7 +341,6 @@ Date: Tue, 18 Mar 2014 17:58:38 GMT
 Failing requests may be due to the following errors:
 
 * status code 400, errno 203: Wrong push endpoint value
-* status code 400, errno 204: Duplicated push endpoint
 * status code 501, errno 101:  Database error
 
 ## GET /account/:alias_type/:alias_value

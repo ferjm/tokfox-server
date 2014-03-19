@@ -149,7 +149,7 @@ describe(path, function() {
         should.not.exist(err);
         should.exist(res);
         res.body.code.should.be.exactly(400);
-        res.body.errno.should.be.exactly(203);
+        res.body.errno.should.be.exactly(204);
         res.body.error.should.be.exactly('Wrong push endpoint value');
         res.body.message.should.be.exactly('Push endpoints must be valid ' +
                                            'HTTP or HTTPS urls');

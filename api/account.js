@@ -185,16 +185,15 @@ exports.update = function(alias, accountData) {
         return;
       }
 
-      var serverError;
+      var duplicatedEndpoint;
       account.pushEndpoints.forEach(function(endpoint) {
         if (accountData.pushEndpoint.invitation === endpoint.invitation ||
             accountData.pushEndpoint.rejection === endpoint.rejection) {
-          serverError = new ServerError(400, 204, 'Duplicated push endpoint');
         }
       });
 
-      if (serverError) {
-        reject(serverError);
+      if (duplicatedEndpoint) {
+        resolve(account);
         return;
       }
 
