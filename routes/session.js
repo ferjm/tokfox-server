@@ -23,9 +23,17 @@ exports.create = function(req, res) {
 };
 
 exports.invite = function(req, res) {
-  req._routeWhitelists.body = ['sessionId', 'alias'];
+  // TODO: Until we have a proper way to authenticate requests, we allow
+  //       the caller to specify it alias. Just for demo purposes.
+  req._routeWhitelists.body = ['sessionId', 'alias', 'callerAlias'];
   cors.allow(req, res);
-  apiRequest('invite', [req.body.sessionId, req.body.alias], req, res);
+  apiRequest('invite', [req.body.sessionId,
+             req.body.alias, req.body.callerAlias], req, res);
+};
+
+exports.getInvitation = function(req, res) {
+  cors.allow(req, res);
+  apiRequest('getInvitation', [req.params.id], req, res);
 };
 
 exports.acceptInvitation = function(req, res) {

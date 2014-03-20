@@ -53,6 +53,7 @@ The currently-defined error responses are:
 * status code 400, errno 121:  Missing invitation ID
 * status code 400, errno 122:  Invalid invitation ID
 * status code 400, errno 123:  Error removing invitation
+* status code 400, errno 124:  Error getting invitation
 * status code 400, errno 201:  Wrong alias type
 * status code 400, errno 202:  Wrong alias value
 * status code 400, errno 203:  Missing alias
@@ -64,7 +65,9 @@ The currently-defined error responses are:
 
 * Session
     * [POST /session/](#post-session)
+* Invitation
     * [POST /session/invitation](#post-sessioninvitation)
+    * [PUT /session/invitation/:id](#put-sessioninvitationid)
     * [GET /session/invitation/:id](#get-sessioninvitationid)
     * [DELETE /session/invitation/:id](#delete-sessioninvitationid)
 * Account
@@ -166,7 +169,7 @@ Failing requests may be due to the following errors:
 * status code 400, errno 112:  Alias not found
 * status code 400, errno 113:  Push notification error
 
-## GET /session/invitation/:id
+## PUT /session/invitation/:id
 
 Allows the user to accept an invitation associated to a given invitation ID. The user will be provided with the required credentials to join the session as response to this request.
 
@@ -177,7 +180,7 @@ ___Parameters___
 * invitationId: Identifier of the invitation. This value is received via [SimplePush notification](https://developer.mozilla.org/en-US/docs/WebAPI/Simple_Push) as the value of *version*.
 
 ```ssh
-GET /session/invitation/1394044918008 HTTP/1.1
+PUT /session/invitation/1394044918008 HTTP/1.1
 Content-Type: application/json
 ```
 
@@ -205,6 +208,51 @@ Failing requests may be due to the following errors:
 * status code 400, errno 121:  Missing invitation ID
 * status code 400, errno 122:  Invalid invitation ID
 * status code 400, errno 123:  Error removing invitation
+* status code 400, errno 124:  Error getting invitation
+
+## GET /session/invitation/:id
+
+Allows the user to get the details of an invitation associated to a given invitation ID.
+
+### Request
+
+___Parameters___
+
+* invitationId: Identifier of the invitation. This value is received via [SimplePush notification](https://developer.mozilla.org/en-US/docs/WebAPI/Simple_Push) as the value of *version*.
+
+```ssh
+GET /session/invitation/1394044918008 HTTP/1.1
+```
+
+### Response
+
+Successful requests will produce a "200 OK" response with the details of the invitation provided in the JSON body.
+
+```ssh
+HTTP/1.1 200 OK
+Access-Control-Allow-Methods: PUT, GET, OPTIONS, POST, DELETE
+Content-Type: application/json; charset=utf-8
+X-Powered-By: Express
+Access-Control-Allow-Origin: *
+Connection: close
+Date: Thu, 20 Mar 2014 09:32:37 GMT
+Content-Length: 30
+Etag: "-1631359040"
+
+{
+    "callerAlias": {
+      "type": "msisdn",
+      "value": "+34666777888"
+    }
+}
+```
+
+Failing requests may be due to the following errors:
+
+* status code 400, errno 121:  Missing invitation ID
+* status code 400, errno 122:  Invalid invitation ID
+* status code 400, errno 123:  Error removing invitation
+* status code 400, errno 124:  Error getting invitation
 
 ## DELETE /session/invitation/:id
 
@@ -234,6 +282,7 @@ Failing requests may be due to the following errors:
 
 * status code 400, errno 113:  Push notification error
 * status code 400, errno 122:  Invalid invitation ID
+* status code 400, errno 124:  Error getting invitation
 
 ## POST /account/
 ### Request

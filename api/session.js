@@ -1,4 +1,5 @@
 var account     = require('./account.js');
+var Alias       = require('../models/aliasSchema.js');
 var opentok     = require('../tokbox/opentok.js');
 var OpenTokSDK  = require('opentok');
 var Promise     = require('bluebird');
@@ -71,7 +72,7 @@ exports.create = function(sessionId, role) {
   });
 };
 
-exports.invite = function(sessionId, alias) {
+exports.invite = function(sessionId, alias, callerAlias) {
   return new Promise(function(resolve, reject) {
     if (!sessionId) {
       reject(new ServerError(400, 110, 'Missing sessionId',
@@ -79,7 +80,8 @@ exports.invite = function(sessionId, alias) {
       return;
     }
 
-    if (!alias || !account.isValidAlias(alias)) {
+    if (!alias || !account.isValidAlias(alias) ||
+        (callerAlias && !account.isValidAlias(callerAlias))) {
       var aliasType = [];
       Object.keys(account.AliasType).forEach(function(key) {
         aliasType.push(account.AliasType[key]);
@@ -107,10 +109,11 @@ exports.invite = function(sessionId, alias) {
 
       // TODO: Check if the alias is verified, once we have alias verification.
 
-      // TODO: We have no way to authenticate the request yet, so we don't
-      //      specify the caller details in the invitation.
+      // TODO: We have no way to authenticate the request yet, so we allow the
+      //       the caller to specify his alias. Only for demo purposes..
       account.addInvitation(receiverAccount._id, {
-        'sessionId': sessionId
+        'sessionId': sessionId,
+        'callerAlias': callerAlias
       })
       .then(function(invitation) {
         // Notify the receiver user about the invitation via push.
@@ -141,6 +144,32 @@ exports.invite = function(sessionId, alias) {
           });
         });
       });
+    });
+  });
+};
+
+exports.getInvitation = function(invitationId) {
+  return new Promise(function(resolve, reject) {
+    if (!invitationId) {
+      reject(new ServerError(400, 121, 'Missing invitation ID'));
+      return;
+    }
+
+    account.getByInvitation(invitationId)
+    .then(function(receiverAccount) {
+      if (!receiverAccount || !receiverAccount.invitation) {
+        reject(new ServerError(400, 122, 'Invalid invitation ID'));
+        return;
+      }
+      resolve({
+        callerAlias: receiverAccount.invitation[0].callerAlias[0] || {
+          type: 'msisdn',
+          value: 'Unknown'
+        }
+      });
+    })
+    .catch(function(e) {
+      reject(new ServerError(400, 124, 'Error getting invitation', e));
     });
   });
 };
@@ -187,6 +216,9 @@ exports.acceptInvitation = function(invitationId) {
       .catch(function(e) {
         reject(new ServerError(400, 123, 'Error removing invitation', e));
       });
+    })
+    .catch(function(e) {
+      reject(new ServerError(400, 124, 'Error getting invitation', e));
     });
   });
 };
@@ -229,6 +261,9 @@ exports.rejectInvitation = function(invitationId) {
           }
         });
       });
+    })
+    .catch(function(e) {
+      reject(new ServerError(400, 124, 'Error getting invitation', e));
     });
   });
 };

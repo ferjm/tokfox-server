@@ -20,7 +20,8 @@ var router = function(app) {
 
   // Invitations.
   app.post('/session/invitation/', session.invite);
-  app.get('/session/invitation/:id', session.acceptInvitation);
+  app.get('/session/invitation/:id', session.getInvitation);
+  app.put('/session/invitation/:id', session.acceptInvitation);
   app.del('/session/invitation/:id', session.rejectInvitation);
 
   // Accounts.
