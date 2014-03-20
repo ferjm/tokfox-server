@@ -353,15 +353,6 @@ Content-Length: 780
 Date: Tue, 18 Mar 2014 17:58:38 GMT
 
 {
-  "__v": 1,
-  "_id": "53288395854b07f1c0de5020",
-  "invitation": [
-    {
-      "sessionId": "1_MX40NDYzMjUyMn5-V2VkIE1hciAwNSAwOTozNzo1NCBQU1QgMjAxNH4wLjE3NTQzNTU0fg",
-      "_id": "5328871d104d0421c17b7c61",
-      "version": 1395164957654
-    }
-  ],
   "pushEndpoints": [
     {
       "invitation": "http://localhost:3001",

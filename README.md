@@ -1,8 +1,15 @@
 TokFox
 =======
-TokFox is a Telefónica Digital service that provides peer identification and peer discovery in a WebRTC connection.
+TokFox is proof of concept of a service that provides peer identification and peer discovery in a WebRTC connection with [Tokbox](http://www.tokbox.com) as the WebRTC service provider.
 
-[Detailed API spec](/docs/api.md)
+Peer identification is done via MSISDN. There is no MSISDN verification and no authentication mechanism for the server requests so far.
+
+* [Detailed API spec](/docs/api.md)
+* [Data Flows](/docs/flows.md)
+
+TokFox in action
+---
+Check [this video](https://vimeo.com/89630213) for a demo of a [TokFox client](https://github.com/ferjm/tokfox-firefoxos-demo) running in Firefox OS, Firefox and Chrome for Android (password protected).
 
 Getting TokFox server
 ---
