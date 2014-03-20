@@ -110,7 +110,7 @@ exports.invite = function(sessionId, alias, callerAlias) {
       // TODO: Check if the alias is verified, once we have alias verification.
 
       // TODO: We have no way to authenticate the request yet, so we allow the
-      //       the caller to specify his alias. Only for demo purposes..
+      //       the caller to specify his alias. Only for demo purposes.
       account.addInvitation(receiverAccount._id, {
         'sessionId': sessionId,
         'callerAlias': callerAlias
@@ -162,7 +162,7 @@ exports.getInvitation = function(invitationId) {
         return;
       }
       resolve({
-        callerAlias: receiverAccount.invitation[0].callerAlias[0] || {
+        callerAlias: receiverAccount.invitation[0].callerAlias || {
           type: 'msisdn',
           value: 'Unknown'
         }

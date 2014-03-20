@@ -4,7 +4,10 @@ var Schema    = mongoose.Schema;
 
 var invitationSchema = new Schema({
   sessionId: { type: String },
-  callerAlias: { type: [Alias.schema] },
+  callerAlias: {
+    type: { type: String },
+    value: { type: String }
+  },
   version: { type: Number, default: Date.now }
 });
 

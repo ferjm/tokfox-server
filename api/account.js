@@ -214,8 +214,7 @@ exports.addInvitation = function(accountId, invitation) {
     account.findOneAndUpdate({
       _id: accountId
     }, {
-      invitation: invitation,
-      'invitation.callerAlias': invitation.callerAlias
+      invitation: invitation
     }, function(error, account) {
       if (error) {
         reject(new ServerError(501, 101, 'Database error', error));
