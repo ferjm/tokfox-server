@@ -73,10 +73,10 @@ describe(path + ':id/', function() {
     opentok.generateToken.restore();
   });
 
-  it('PUT', function(done) {
+  it('GET', function(done) {
     request(app)
       .put(path + _invitationId)
-      .expect(404, done);
+      .expect(200, done);
   });
 
   it('POST', function(done) {
@@ -85,11 +85,10 @@ describe(path + ':id/', function() {
       .expect(404, done);
   });
 
-  it('GET', function(done) {
+  it('PUT', function(done) {
     request(app)
-      .get(path + _invitationId)
+      .put(path + _invitationId)
       .expect(200)
-      .type('json')
       .end(function(err, res) {
         should.not.exist(err);
         should.exist(res);
@@ -108,18 +107,17 @@ describe(path + ':id/', function() {
       });
   });
 
-  it('GET without invitation ID', function(done) {
+  it('PUT without invitation ID', function(done) {
     request(app)
-      .get(path)
+      .put(path)
       .expect(404, done);
   });
 
-  it('GET with invalid invitation ID', function(done) {
+  it('PUT with invalid invitation ID', function(done) {
     _invalidInvitation = true;
     request(app)
-      .get(path + _invitationId)
+      .put(path + _invitationId)
       .expect(400)
-      .type('json')
       .end(function(err, res) {
         should.not.exist(err);
         should.exist(res);
@@ -138,12 +136,11 @@ describe(path + ':id/', function() {
       });
   });
 
-  it('GET with invalid session ID', function(done) {
+  it('PUT with invalid session ID', function(done) {
     _invalidSessionId = true;
     request(app)
-      .get(path + _invitationId)
+      .put(path + _invitationId)
       .expect(400)
-      .type('json')
       .end(function(err, res) {
         should.not.exist(err);
         should.exist(res);
@@ -162,12 +159,11 @@ describe(path + ':id/', function() {
       });
   });
 
-  it('GET with error removing invitation', function(done) {
+  it('PUT with error removing invitation', function(done) {
     _removeInvitationError = true;
     request(app)
-      .get(path + _invitationId)
+      .put(path + _invitationId)
       .expect(400)
-      .type('json')
       .end(function(err, res) {
         should.not.exist(err);
         should.exist(res);
@@ -185,5 +181,4 @@ describe(path + ':id/', function() {
         done()
       });
   });
-
 });
