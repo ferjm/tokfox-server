@@ -9,7 +9,7 @@ Peer identification is done via MSISDN. There is no MSISDN verification and no a
 
 TokFox in action
 ---
-Check [this video](https://vimeo.com/89630213) for a demo of a [TokFox client](https://github.com/ferjm/tokfox-firefoxos-demo) running in Firefox OS, Firefox and Chrome for Android (password protected).
+Check [this video](https://vimeo.com/89703829) for a demo of a [TokFox client](https://github.com/ferjm/tokfox-firefoxos-demo) running in Firefox OS, Firefox and Firefox for Android (password protected).
 
 Getting TokFox server
 ---
